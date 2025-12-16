@@ -35,7 +35,7 @@ flowchart TB
         SFR["Force Recorder"]
     end
 
-    subgraph IBAPI["IBAPI Trading<br/>IB 美股交易系統"]
+    subgraph IBAPI["IBAPI Trading<br/>IB 美股交易系統<br/>"]
         IW["Web Frontend"]
         IA["Backend API"]
         IP["PostgreSQL"]
@@ -114,19 +114,19 @@ flowchart LR
     subgraph Pillars["可觀測性三大支柱"]
         direction TB
 
-        subgraph M["📊 Metrics<br/>指標監控"]
+        subgraph M["📊 Metrics<br/>指標監控<br/>"]
             M1["數值型時序資料"]
             M2["系統健康狀態"]
             M3["效能趨勢分析"]
         end
 
-        subgraph L["📝 Logs<br/>日誌監控"]
+        subgraph L["📝 Logs<br/>日誌監控<br/>"]
             L1["事件記錄"]
             L2["錯誤追蹤"]
             L3["行為分析"]
         end
 
-        subgraph T["🔍 Traces<br/>分散式追蹤"]
+        subgraph T["🔍 Traces<br/>分散式追蹤<br/>"]
             T1["請求路徑追蹤"]
             T2["服務間延遲"]
             T3["瓶頸定位"]
