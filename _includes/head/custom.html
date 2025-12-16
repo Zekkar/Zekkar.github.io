@@ -80,10 +80,45 @@
           const svg = el.querySelector('svg');
           if (svg) {
             const clone = svg.cloneNode(true);
-            clone.style.maxWidth = '95vw';
-            clone.style.maxHeight = '90vh';
-            clone.style.width = 'auto';
-            clone.style.height = 'auto';
+
+            // 取得 viewBox 來計算原始比例
+            const viewBox = svg.getAttribute('viewBox');
+            let svgWidth, svgHeight;
+
+            if (viewBox) {
+              const parts = viewBox.split(' ');
+              svgWidth = parseFloat(parts[2]);
+              svgHeight = parseFloat(parts[3]);
+            } else {
+              svgWidth = svg.getBoundingClientRect().width;
+              svgHeight = svg.getBoundingClientRect().height;
+            }
+
+            // 計算放大後的尺寸，盡量填滿螢幕
+            const maxW = window.innerWidth * 0.92;
+            const maxH = window.innerHeight * 0.88;
+            const ratio = svgWidth / svgHeight;
+
+            let newWidth, newHeight;
+            if (maxW / maxH > ratio) {
+              // 高度受限
+              newHeight = maxH;
+              newWidth = newHeight * ratio;
+            } else {
+              // 寬度受限
+              newWidth = maxW;
+              newHeight = newWidth / ratio;
+            }
+
+            // 強制設定放大尺寸
+            clone.removeAttribute('width');
+            clone.removeAttribute('height');
+            clone.removeAttribute('style');
+            clone.style.width = newWidth + 'px';
+            clone.style.height = newHeight + 'px';
+            clone.style.maxWidth = 'none';
+            clone.style.maxHeight = 'none';
+
             modal.querySelector('.mermaid-modal-body').innerHTML = '';
             modal.querySelector('.mermaid-modal-body').appendChild(clone);
             modal.classList.add('active');
@@ -128,9 +163,7 @@
     z-index: 1;
     background: #fff;
     border-radius: 12px;
-    padding: 20px;
-    max-width: 95vw;
-    max-height: 95vh;
+    padding: 30px;
     overflow: auto;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
   }
@@ -177,13 +210,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 300px;
-    min-height: 200px;
-    padding-top: 20px;
+    padding-top: 10px;
   }
 
   .mermaid-modal-body svg {
     display: block;
+    max-width: none !important;
+    max-height: none !important;
   }
 
   /* 提示游標 */
