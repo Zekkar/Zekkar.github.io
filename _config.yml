@@ -85,6 +85,10 @@ plugins:
   - jekyll-feed
   - jekyll-include-cache
 
+# 包含 _pages 資料夾
+include:
+  - _pages
+
 # 排除建置的檔案
 exclude:
   - Gemfile
