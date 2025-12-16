@@ -1,5 +1,5 @@
 # Jekyll 基本設定
-title: Zekkar's Blog
+title: DS's Blog
 subtitle: 技術筆記與生活分享
 description: >-
   分享程式開發、技術心得，以及生活點滴的個人部落格。
@@ -8,7 +8,7 @@ baseurl: ""
 
 # 作者資訊
 author:
-  name: Zekkar
+  name: DS
   bio: "軟體開發者 | 終身學習者"
   location: "Taiwan"
   links:
