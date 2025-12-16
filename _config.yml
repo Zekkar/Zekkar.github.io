@@ -73,9 +73,12 @@ sidebar:
 comments:
   provider: false
 
-# 分析（可稍後設定）
+# Google Analytics 4
 analytics:
-  provider: false
+  provider: "google-gtag"
+  google:
+    tracking_id: "G-H7VC2XRWBJ"
+    anonymize_ip: false
 
 # 外掛程式
 plugins:
