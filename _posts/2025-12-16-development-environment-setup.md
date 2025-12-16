@@ -16,12 +16,12 @@ toc_sticky: true
 
 ## 系統架構總覽
 
-> **VM**: `192.168.50.194` (Ubuntu Linux)
+> **VM**: Ubuntu Linux
 
 <pre class="mermaid">
 flowchart TB
     subgraph User["使用者存取"]
-        Browser["瀏覽器<br/>192.168.50.194"]
+        Browser["瀏覽器"]
     end
 
     subgraph Portal["統一入口"]
@@ -359,11 +359,11 @@ flowchart LR
 
 ### 存取方式
 
-| 服務 | URL |
-|------|-----|
-| Grafana | http://192.168.50.194:3000 |
-| Prometheus | http://192.168.50.194:9090 |
-| Alertmanager | http://192.168.50.194:9093 |
+| 服務 | Port |
+|------|------|
+| Grafana | :3000 |
+| Prometheus | :9090 |
+| Alertmanager | :9093 |
 
 ---
 
