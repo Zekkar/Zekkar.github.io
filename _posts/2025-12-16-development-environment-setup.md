@@ -25,50 +25,50 @@ flowchart TB
     end
 
     subgraph Portal["統一入口"]
-        Homepage["Homepage Portal<br/>:3001"]
+        Homepage["Homepage Portal"]
     end
 
     subgraph ShioajiPy["ShioajiPy<br/>台股選擇權交易系統"]
-        SF["Frontend :8081"]
-        SB["Backend API :5175"]
-        SG["Gateway :8888"]
+        SF["Frontend"]
+        SB["Backend API"]
+        SG["Gateway"]
         SFR["Force Recorder"]
     end
 
     subgraph IBAPI["IBAPI Trading<br/>IB 美股交易系統"]
-        IW["Web Frontend :80"]
-        IA["Backend API :8000"]
-        IP["PostgreSQL :5432"]
-        IAD["Adminer :8080"]
+        IW["Web Frontend"]
+        IA["Backend API"]
+        IP["PostgreSQL"]
+        IAD["Adminer"]
     end
 
     subgraph Infra["Infrastructure<br/>基礎設施"]
         direction TB
-        Grafana["Grafana :3000"]
-        Traefik["Traefik :8090"]
-        Portainer["Portainer :9000"]
+        Grafana["Grafana"]
+        Traefik["Traefik"]
+        Portainer["Portainer"]
 
         subgraph Metrics["📊 Metrics 監控"]
-            Prometheus["Prometheus :9090"]
-            Alertmanager["Alertmanager :9093"]
+            Prometheus["Prometheus"]
+            Alertmanager["Alertmanager"]
         end
 
         subgraph Logs["📝 Logs 監控"]
-            Loki["Loki :3100"]
+            Loki["Loki"]
             Promtail["Promtail"]
         end
 
         subgraph Tracing["🔍 Tracing 監控"]
-            Tempo["Tempo :3200<br/>OTLP :4317/:4318"]
+            Tempo["Tempo"]
         end
     end
 
     subgraph SharedServices["共用服務"]
-        Redis["Redis :6379"]
+        Redis["Redis"]
         subgraph Exporters["指標收集器"]
-            NodeExp["Node Exporter :9100"]
-            cAdvisor["cAdvisor :8082"]
-            RedisExp["Redis Exporter :9121"]
+            NodeExp["Node Exporter"]
+            cAdvisor["cAdvisor"]
+            RedisExp["Redis Exporter"]
         end
     end
 
@@ -140,7 +140,7 @@ flowchart LR
     end
 
     subgraph Viz["統一視覺化"]
-        Grafana["Grafana :3000"]
+        Grafana["Grafana"]
     end
 
     M --> Prometheus
@@ -171,13 +171,13 @@ flowchart LR
 
 ### 核心元件
 
-| 元件 | Port | 作用 |
-|------|------|------|
-| **Prometheus** | 9090 | 時序資料庫，負責收集、儲存指標並執行告警規則 |
-| **Alertmanager** | 9093 | 告警管理，負責去重、分組、路由告警通知 |
-| **Node Exporter** | 9100 | 收集系統層級指標（CPU、Memory、Disk、Network） |
-| **cAdvisor** | 8082 | 收集 Docker 容器資源使用指標 |
-| **Redis Exporter** | 9121 | 收集 Redis 效能指標 |
+| 元件 | 作用 |
+|------|------|
+| **Prometheus** | 時序資料庫，負責收集、儲存指標並執行告警規則 |
+| **Alertmanager** | 告警管理，負責去重、分組、路由告警通知 |
+| **Node Exporter** | 收集系統層級指標（CPU、Memory、Disk、Network） |
+| **cAdvisor** | 收集 Docker 容器資源使用指標 |
+| **Redis Exporter** | 收集 Redis 效能指標 |
 
 ### Metrics 的作用
 
@@ -214,10 +214,10 @@ flowchart LR
 
 ### 核心元件
 
-| 元件 | Port | 作用 |
-|------|------|------|
-| **Loki** | 3100 | 日誌聚合系統，負責儲存和查詢日誌 |
-| **Promtail** | - | 日誌收集 Agent，從各容器抓取 stdout/stderr |
+| 元件 | 作用 |
+|------|------|
+| **Loki** | 日誌聚合系統，負責儲存和查詢日誌 |
+| **Promtail** | 日誌收集 Agent，從各容器抓取 stdout/stderr |
 
 ### 日誌收集架構
 
@@ -233,7 +233,7 @@ flowchart LR
     end
 
     subgraph Storage["儲存層"]
-        Loki["Loki :3100<br/>日誌聚合"]
+        Loki["Loki<br/>日誌聚合"]
     end
 
     subgraph Query["查詢層"]
@@ -287,13 +287,13 @@ flowchart LR
 
 ### 核心元件
 
-| 元件 | Port | 作用 |
-|------|------|------|
-| **Tempo** | 3200 | 分散式追蹤後端，儲存和查詢 Trace 資料 |
-| **OTLP gRPC** | 4317 | OpenTelemetry gRPC 協議接收端 |
-| **OTLP HTTP** | 4318 | OpenTelemetry HTTP 協議接收端 |
-| **Zipkin** | 9411 | Zipkin 協議相容接收端 |
-| **Jaeger** | 14268 | Jaeger 協議相容接收端 |
+| 元件 | 作用 |
+|------|------|
+| **Tempo** | 分散式追蹤後端，儲存和查詢 Trace 資料 |
+| **OTLP gRPC** | OpenTelemetry gRPC 協議接收端 |
+| **OTLP HTTP** | OpenTelemetry HTTP 協議接收端 |
+| **Zipkin** | Zipkin 協議相容接收端 |
+| **Jaeger** | Jaeger 協議相容接收端 |
 
 ### Tracing 的作用
 
@@ -357,14 +357,6 @@ flowchart LR
 | 服務日誌 | 即時日誌串流 |
 | 錯誤日誌 | 錯誤/警告過濾與統計 |
 
-### 存取方式
-
-| 服務 | Port |
-|------|------|
-| Grafana | :3000 |
-| Prometheus | :9090 |
-| Alertmanager | :9093 |
-
 ---
 
 ## Docker 網路架構
@@ -415,35 +407,3 @@ flowchart TB
     class SG,SB,SF,SFR,RD shioaji
     class IW,IA,IPG,IAD ibapi
 </pre>
-
----
-
-## Port 總覽
-
-### 交易系統
-
-| Port | 服務 | 專案 |
-|------|------|------|
-| 80 | Web Frontend | IBAPI Trading |
-| 5175 | Backend API | ShioajiPy |
-| 5432 | PostgreSQL | IBAPI Trading |
-| 8000 | Backend API | IBAPI Trading |
-| 8080 | Adminer | IBAPI Trading |
-| 8081 | Frontend | ShioajiPy |
-| 8888 | Gateway | ShioajiPy |
-
-### 基礎設施
-
-| Port | 服務 | 類別 |
-|------|------|------|
-| 3000 | Grafana | 視覺化 |
-| 3001 | Homepage | Portal |
-| 3100 | Loki | Logs |
-| 3200 | Tempo | Tracing |
-| 6379 | Redis | 共用服務 |
-| 8082 | cAdvisor | Metrics |
-| 9000 | Portainer | 管理 |
-| 9090 | Prometheus | Metrics |
-| 9093 | Alertmanager | Metrics |
-| 9100 | Node Exporter | Metrics |
-| 9121 | Redis Exporter | Metrics |
