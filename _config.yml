@@ -9,7 +9,6 @@ baseurl: ""
 # 作者資訊
 author:
   name: DS
-  bio: "軟體開發者 | 終身學習者"
   location: "Taiwan"
   links:
     - label: "GitHub"
