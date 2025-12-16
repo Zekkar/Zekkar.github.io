@@ -12,3 +12,34 @@
     }
   })();
 </script>
+
+<!-- Mermaid 圖表支援 -->
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+  // 根據當前主題設定 Mermaid 主題
+  function getMermaidTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default';
+  }
+
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: getMermaidTheme(),
+    securityLevel: 'loose',
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis'
+    }
+  });
+
+  // 監聽主題切換，重新渲染 Mermaid
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.attributeName === 'data-theme') {
+        location.reload();
+      }
+    });
+  });
+  observer.observe(document.documentElement, { attributes: true });
+</script>
