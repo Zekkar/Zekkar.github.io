@@ -1,0 +1,12 @@
+# 主要導覽列
+main:
+  - title: "首頁"
+    url: /
+  - title: "文章"
+    url: /posts/
+  - title: "分類"
+    url: /categories/
+  - title: "標籤"
+    url: /tags/
+  - title: "關於"
+    url: /about/
