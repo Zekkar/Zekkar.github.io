@@ -1,0 +1,14 @@
+<!-- 深色模式切換腳本 -->
+<script src="{{ '/assets/js/theme-toggle.js' | relative_url }}" defer></script>
+
+<!-- 防止閃爍：在頁面載入前先設定主題 -->
+<script>
+  (function() {
+    var theme = localStorage.getItem('theme');
+    if (theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>

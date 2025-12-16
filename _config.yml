@@ -18,7 +18,7 @@ author:
 
 # 主題設定
 remote_theme: "mmistakes/minimal-mistakes@4.26.2"
-minimal_mistakes_skin: "default" # 可選: "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
+minimal_mistakes_skin: "aqua" # 可選: "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 
 # 輸出設定
 permalink: /:categories/:title/
@@ -64,7 +64,7 @@ search_full_content: true
 
 # 導覽列
 header:
-  overlay_color: "#5e616c"
+  overlay_color: "#00838f"
 
 # 側邊欄
 sidebar:
