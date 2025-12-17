@@ -73,6 +73,11 @@ sidebar:
 comments:
   provider: false
 
+# Mermaid 圖表支援
+after_footer_scripts:
+  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
+  - /assets/js/mermaid-init.js
+
 # Google Analytics 4
 analytics:
   provider: "google-gtag"
