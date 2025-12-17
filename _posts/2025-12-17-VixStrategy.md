@@ -209,18 +209,6 @@ UVXY 與一般股票（如 AAPL 或 TSLA）的特性截然不同，它追蹤的�
 - UVXY 的隱含波動率（IV）極高，這意味著你可以收取的權利金（Premium）非常豐厚。
 - **對抗衰退：** 由於 UVXY 長期因轉倉成本（Contango）趨於向下掉，Covered Call 收取的權利金可以有效抵消持倉的帳面損失，降低持倉成本。
 
-#### 輪轉策略 (The Wheel)
-
-**步驟：**
-
-```
-賣出現金擔保 Put (Cash-Secured Put)
-→ 被指派獲得股票
-→ 賣出 Covered Call
-→ 股票被叫走
-→ 重回賣 Put
-```
-
 **優勢：**
 
 - UVXY 經常在低位橫盤。
