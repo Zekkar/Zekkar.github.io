@@ -1,3 +1,6 @@
+# Language strings for Mr. Green Theme
+# 繁體中文配置
+
 en:
   post:
     posted_on: "Posted on"
@@ -6,6 +9,7 @@ en:
     author: "Author"
     share: "Share"
     comments: "Comments"
+    read_time: "Read Time"
   page:
     zen_mode: "Zen Mode"
   other:
@@ -25,6 +29,7 @@ zh-TW:
     author: "作者"
     share: "分享"
     comments: "評論"
+    read_time: "閱讀時間"
   page:
     zen_mode: "禪模式"
   other:

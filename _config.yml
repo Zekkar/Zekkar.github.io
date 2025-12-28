@@ -1,44 +1,49 @@
-# Jekyll 基本設定
+# Site settings
 title: DS's Blog
 subtitle: 技術筆記與生活分享
 description: >-
   分享程式開發、技術心得，以及生活點滴的個人部落格。
 url: "https://zekkar.github.io"
 baseurl: ""
-lang: "zh-TW" # Mr. Green 需要語言設定
 
-# 作者資訊 (調整為 Mr. Green 可能期望的結構)
+# Language settings (Critical for Mr. Green)
+lang: "zh-TW"
+timezone: Asia/Taipei
+encoding: "utf-8"
+
+# Author
 author:
   name: DS
-  location: "Taiwan"
-  github: "Zekkar"
-  links:
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/Zekkar"
+  github: Zekkar
+  # picture: /assets/images/profile.jpg # 如果您有頭像圖片，請取消註解並確認路徑
 
-# 主題設定
+# Theme
 remote_theme: "MrGreensWorkshop/MrGreen-JekyllTheme"
 
-# Mr. Green 主題特定設定 (參考範例)
+# Theme Specific Settings
 theme_settings:
-  color_scheme: "dark" # 鎖定深色模式
-  header_type: "fixed" # 或 "static"
+  # Color scheme: "auto", "light", "dark"
+  color_scheme: "dark"
+  
+  # Layout
+  header_type: "fixed" # "static" or "fixed"
   show_tags: true
   show_categories: true
   show_author: true
-  share_links:
-    - twitter
-    - facebook
-    - linkedin
+  
+  # Navbar links
+  navbar:
+    - { title: "首頁", url: "/" }
+    - { title: "所有文章", url: "/posts/" }
+    - { title: "關於我", url: "/about/" }
+    - { title: "分類", url: "/categories/" }
 
-# 輸出設定
-permalink: /:categories/:title/
+# Output
+permalink: /:year/:month/:day/:title/
 paginate: 10
 paginate_path: /page:num/
-timezone: Asia/Taipei
 
-# 預設設定
+# Defaults
 defaults:
   - scope:
       path: ""
@@ -57,39 +62,23 @@ defaults:
     values:
       layout: page
 
-# 分類與標籤
-category_archive:
-  type: liquid
-  path: /categories/
-tag_archive:
-  type: liquid
-  path: /tags/
-
-# 搜尋功能
-search: true
-
-# 插件設定
+# Plugins
 plugins:
   - jekyll-remote-theme
   - jekyll-paginate
   - jekyll-sitemap
-  - jekyll-feed
   - jekyll-include-cache
   - jekyll-seo-tag
 
-# 包含 _pages 資料夾
-include:
-  - _pages
+# Custom Scripts (Restore Mermaid)
+footer_scripts:
+  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
+  - /assets/js/mermaid-init.js
 
-# 排除檔案
+# Exclude
 exclude:
   - Gemfile
   - Gemfile.lock
   - node_modules
   - vendor
   - README.md
-
-# 自定義頁尾腳本 (Mr. Green 支援)
-footer_scripts:
-  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
-  - /assets/js/mermaid-init.js
