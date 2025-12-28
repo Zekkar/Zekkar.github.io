@@ -7,7 +7,7 @@ url: "https://zekkar.github.io"
 baseurl: ""
 
 # Language settings (Critical for Mr. Green)
-lang: "en"
+lang: "zh-TW"
 timezone: Asia/Taipei
 encoding: "utf-8"
 
@@ -65,7 +65,7 @@ defaults:
 # Plugins
 plugins:
   - jekyll-remote-theme
-  # - jekyll-paginate # 暫時停用以除錯
+  - jekyll-paginate # 暫時停用以除錯
   - jekyll-sitemap
   - jekyll-include-cache
   - jekyll-seo-tag
