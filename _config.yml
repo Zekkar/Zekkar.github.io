@@ -22,7 +22,7 @@ social:
     - https://github.com/Zekkar
 
 # 主題設定
-remote_theme: cotes2020/jekyll-theme-chirpy
+theme: jekyll-theme-chirpy
 
 # Google Analytics
 google_analytics:
