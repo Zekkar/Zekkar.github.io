@@ -7,7 +7,7 @@ url: "https://zekkar.github.io"
 baseurl: ""
 
 # Language settings (Critical for Mr. Green)
-lang: "zh-TW"
+lang: "en"
 timezone: Asia/Taipei
 encoding: "utf-8"
 
@@ -65,15 +65,10 @@ defaults:
 # Plugins
 plugins:
   - jekyll-remote-theme
-  - jekyll-paginate
+  # - jekyll-paginate # 暫時停用以除錯
   - jekyll-sitemap
   - jekyll-include-cache
   - jekyll-seo-tag
-
-# Custom Scripts (Restore Mermaid)
-footer_scripts:
-  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
-  - /assets/js/mermaid-init.js
 
 # Exclude
 exclude:
