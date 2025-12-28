@@ -1,7 +1,7 @@
 ---
 title: "關於我"
 permalink: /about/
-layout: single
+layout: page
 author_profile: true
 ---
 

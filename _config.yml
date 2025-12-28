@@ -16,8 +16,8 @@ author:
       url: "https://github.com/Zekkar"
 
 # 主題設定
-remote_theme: "mmistakes/minimal-mistakes@4.26.2"
-minimal_mistakes_skin: "aqua" # 可選: "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
+remote_theme: "MrGreensWorkshop/MrGreen-JekyllTheme"
+# minimal_mistakes_skin: "aqua" # 已移除，新主題不適用
 
 # 輸出設定
 permalink: /:categories/:title/
@@ -32,22 +32,22 @@ defaults:
       path: ""
       type: posts
     values:
-      layout: single
-      author_profile: true
+      layout: post # 改為標準的 post
+      # author_profile: true # Minimal Mistakes 特有，先註解
       read_time: true
       comments: true
       share: true
       related: true
       show_date: true
       toc: true
-      toc_sticky: true
+      # toc_sticky: true # Minimal Mistakes 特有，先註解
   # 頁面預設值
   - scope:
       path: ""
       type: pages
     values:
-      layout: single
-      author_profile: true
+      layout: page # 改為標準的 page
+      # author_profile: true
 
 # 分類與標籤
 category_archive:
@@ -61,13 +61,13 @@ tag_archive:
 search: true
 search_full_content: true
 
-# 導覽列
-header:
-  overlay_color: "#00838f"
+# 導覽列 (Minimal Mistakes 特有配置，先註解)
+# header:
+#   overlay_color: "#00838f"
 
-# 側邊欄
-sidebar:
-  nav: "main"
+# 側邊欄 (Minimal Mistakes 特有配置，先註解)
+# sidebar:
+#   nav: "main"
 
 # 留言系統（可稍後設定）
 comments:
