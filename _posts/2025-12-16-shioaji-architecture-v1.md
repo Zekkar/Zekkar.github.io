@@ -1,16 +1,20 @@
 ---
 title: "Shioaji專案架構V1.0"
-date: 2025-12-16 00:00:00 +0800
-categories: [技術]
-tags: [Shioaji, 系統架構, Python]
+date: 2025-12-16
+categories:
+  - 技術
+tags:
+  - Shioaji
+  - 系統架構
+  - Python
 excerpt: "ShioajiPy 系統架構設計文檔，包含前端、API Gateway、核心微服務層與資料來源層的完整架構圖。"
 toc: true
-mermaid: true
+toc_sticky: true
 ---
 
 ## 系統架構圖
 
-```mermaid
+<pre class="mermaid">
 graph TD
     %% 定義風格 (CSS Classes)
     classDef layer fill:#f0f8ff,stroke:#333,stroke-width:2px;
@@ -67,7 +71,7 @@ graph TD
     Redis -- "Redis 訂閱 (T 字報價)" --> ForceRecorder
     DualSell -- "策略狀態發布 (Pub/Sub)" --> Redis
     DualSell -- "通知請求" --> Notification
-```
+</pre>
 
 ## 架構說明
 
