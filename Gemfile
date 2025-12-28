@@ -2,6 +2,8 @@ source "https://rubygems.org"
 
 gem "github-pages", group: :jekyll_plugins
 gem "jekyll-include-cache", group: :jekyll_plugins
+gem "jekyll-remote-theme"
+gem "faraday-retry"
 
 # Windows 和 JRuby 沒有 zoneinfo 檔案，需要 tzinfo-data gem
 platforms :mingw, :x64_mingw, :mswin, :jruby do
