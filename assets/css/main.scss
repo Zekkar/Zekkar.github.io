@@ -4,64 +4,177 @@
 
 @charset "utf-8";
 
-// 引入 Google Fonts (範例: Noto Sans TC 和 JetBrains Mono)
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Noto+Sans+TC:wght@400;700&display=swap');
+// 引入 Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Noto+Sans+TC:wght@400;500;700&display=swap');
 
-// 1. 定義品牌色票
-$primary-color: #0097a7; // 一個更沉穩的青色
-$primary-color-light: #4dd0e1;
-$text-color-light: #333; // for light mode text
-$background-color-light: #fdfdfd; // for light mode background
+// --- 變數定義 (Muki.tw 風格靈感) ---
 
-// 2. 覆寫主題預設變數 (亮色模式)
+// 1. 品牌色 (Teal / 藍綠色系)
+$primary-color: #00b894;       // 主色 (亮色模式用)
+$primary-color-dark: #00896f;  // 深一點的主色 (Hover用)
+$primary-color-light: #55efc4; // 淺一點的主色 (深色模式連結用)
+
+// 2. 亮色模式色票
+$text-color-light: #2d3436;    // 深灰，高對比但不刺眼
+$background-color-light: #ffffff;
+$light-gray: #f5f6fa;          // 用於次要背景
+
+// 3. 覆寫 Minimal Mistakes 預設變數
 $link-color: $primary-color;
+$link-color-hover: $primary-color-dark;
 $body-background-color: $background-color-light;
 $text-color: $text-color-light;
+$masthead-link-color: $text-color-light;
+$masthead-link-color-hover: $primary-color;
 
-// 覆寫字體變數
-$sans-serif: "Noto Sans TC", sans-serif;
+// 字體
+$sans-serif: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $monospace: "JetBrains Mono", monospace;
+$base-font-size: 16px;
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
 @import "minimal-mistakes";
 
-/* 深色模式樣式 */
-[data-theme="dark"] {
-  --background-color: #121a26; // 改為深藍灰色
-  --text-color: #c0c5ce; // 帶一點灰的白色
-  --link-color: #{$primary-color-light}; // 與品牌色保持一致
-  --link-hover-color: #80deea;
-  --border-color: #333;
-  --code-background: #16213e;
-  --masthead-background: #1a2433;
+// --- 全域樣式調整 (亮色模式基底) ---
 
+body {
+  font-family: $sans-serif;
+  letter-spacing: 0.02em; // 稍微增加字距，提升閱讀感
+}
+
+// 導覽列優化 (簡潔白底風格)
+.masthead {
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+
+  .masthead__inner-wrap {
+    padding: 0.8rem 1rem;
+    max-width: 1200px; // 限制最大寬度，避免太開
+  }
+
+  .site-title {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: $text-color-light;
+  }
+  
+  .greedy-nav {
+    background: #fff;
+    a {
+      color: $text-color-light;
+      font-weight: 500;
+      &:hover {
+        color: $primary-color;
+      }
+    }
+    .visible-links a:before {
+      background: $primary-color; // 下底線顏色
+    }
+  }
+}
+
+// 內容區塊留白
+.page__content {
+  .archive__item {
+    margin-bottom: 2em;
+    padding: 1.5em;
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid transparent; // 預留邊框空間
+
+    // 卡片式列表效果 (滑鼠懸停時)
+    &:hover {
+      background-color: #fff;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      transform: translateY(-3px);
+      border-color: #eee;
+    }
+
+    // 移除預設的 teaser 圖片左浮動，改為上方或更現代的佈局，這裡保持預設但優化間距
+    .archive__item-teaser {
+      border-radius: 6px;
+    }
+  }
+
+  h1, h2, h3 {
+    font-weight: 700;
+    color: #2d3436;
+    margin-top: 2em;
+  }
+  
+  h2 {
+    border-bottom: 2px solid $primary-color;
+    padding-bottom: 0.3em;
+    display: inline-block; // 底線只跟著文字長度
+    margin-bottom: 1em;
+    width: 100%; // 還是讓它佔滿一行比較整齊，或者改為 block
+    display: block;
+  }
+  
+  p {
+    line-height: 1.8;
+    color: #4a4a4a;
+    font-size: 1.05rem;
+  }
+}
+
+// 按鈕優化
+.btn {
+  border-radius: 30px; // 圓潤風格
+  font-weight: 600;
+  &--primary {
+    background-color: $primary-color;
+    &:hover {
+      background-color: $primary-color-dark;
+    }
+  }
+}
+
+// --- 深色模式樣式 (高對比優化) ---
+[data-theme="dark"] {
+  // 變數
+  --background-color: #121212; // 真・深灰背景
+  --surface-color: #1e1e1e;    // 卡片/區塊背景
+  --text-color: #e0e0e0;       // 主文字
+  --text-muted: #a0a0a0;       // 次要文字
+  --link-color: #55efc4;       // 亮青色，確保對比度
+  --link-hover: #81ecec;
+  --border-color: #333;
+  --code-bg: #2d2d2d;
+  
   background-color: var(--background-color);
   color: var(--text-color);
 
+  // 導覽列
   .masthead {
-    background-color: var(--masthead-background);
+    background-color: var(--surface-color);
     border-bottom-color: var(--border-color);
-  }
+    box-shadow: none;
 
-  .greedy-nav {
-    background: var(--masthead-background);
-
-    a {
+    .site-title {
       color: var(--text-color);
+    }
 
-      &:hover {
-        color: var(--link-color);
+    .greedy-nav {
+      background: var(--surface-color);
+      a {
+        color: var(--text-color);
+        &:hover {
+          color: var(--link-color);
+        }
       }
     }
-
-    .visible-links a:before {
-      background: var(--link-color);
-    }
   }
 
+  // 內容區
   .page__content {
     h1, h2, h3, h4, h5, h6 {
-      color: var(--text-color);
+      color: #fff; // 標題更亮
+    }
+
+    h2 {
+      border-bottom-color: var(--link-color);
     }
 
     p, li, td {
@@ -70,141 +183,94 @@ $monospace: "JetBrains Mono", monospace;
 
     a {
       color: var(--link-color);
-
       &:hover {
-        color: var(--link-hover-color);
+        color: var(--link-hover);
       }
     }
+    
+    // 卡片樣式適配
+    .archive__item {
+      &:hover {
+        background-color: var(--surface-color);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        border-color: var(--border-color);
+      }
+    }
+    
+    .archive__item-title a {
+        color: var(--link-color);
+    }
+    
+    .archive__item-excerpt {
+        color: var(--text-muted);
+    }
   }
-
-  .page__title {
-    color: var(--text-color);
-  }
-
-  .page__meta {
-    color: #aaa;
-  }
-
+  
+  // 側邊欄與其他元素
   .sidebar {
     background-color: var(--background-color);
-  }
-
-  .author__name {
-    color: var(--text-color);
-  }
-
-  .author__bio {
-    color: #ccc;
-  }
-
-  .author__urls-wrapper {
-    a {
-      color: var(--link-color);
+    .nav__list .nav__items {
+        color: var(--text-color);
+        a {
+            color: var(--text-color);
+            &:hover {
+                color: var(--link-color);
+            }
+        }
     }
   }
+  
+  .author__name { color: #fff; }
+  .author__bio { color: var(--text-muted); }
 
-  .archive__item-title {
-    color: var(--text-color);
-
-    a {
-      color: var(--text-color);
-    }
-  }
-
-  .archive__item-excerpt {
-    color: #ccc;
-  }
-
-  .toc {
-    background-color: var(--code-background);
-    border-color: var(--border-color);
-
-    .toc__menu a {
-      color: var(--text-color);
-      border-bottom-color: var(--border-color);
-
-      &:hover {
-        color: var(--link-color);
-      }
-    }
-
-    .active a {
-      color: var(--link-color);
-    }
-  }
-
-  .nav__list .nav__items a {
-    color: var(--text-color);
+  // 表格與程式碼
+  table {
+    thead { background-color: var(--surface-color); }
+    th, td { border-color: var(--border-color); color: var(--text-color); }
+    tbody tr:nth-child(odd) { background-color: rgba(255,255,255,0.03); }
   }
 
   pre, code {
-    background-color: var(--code-background);
-    color: #e0e0e0;
+    background-color: var(--code-bg);
+    color: #f1f1f1;
   }
-
-  .highlight {
-    background-color: var(--code-background);
-  }
-
+  
   .page__footer {
-    background-color: var(--masthead-background);
-    color: var(--text-color);
-  }
-
-  .pagination {
-    a {
-      color: var(--link-color);
+    background-color: #000;
+    color: var(--text-muted);
+    
+    footer .social-icons a {
+        color: var(--text-muted);
+        &:hover { color: var(--link-color); }
     }
   }
-
+  
+  // 搜尋
   .search-content {
-    background-color: var(--background-color);
-
-    .search-input {
-      background-color: var(--code-background);
-      color: var(--text-color);
-    }
-  }
-
-  blockquote {
-    border-left-color: var(--link-color);
-    color: #ccc;
-  }
-
-  hr {
-    border-color: var(--border-color);
-  }
-
-  table {
-    th, td {
-      border-color: var(--border-color);
-    }
-
-    thead {
-      background-color: var(--code-background);
-    }
-
-    tbody tr:nth-child(odd) {
-      background-color: rgba(255, 255, 255, 0.05);
-    }
+      background-color: var(--background-color);
+      .search-input {
+          background-color: var(--surface-color);
+          color: var(--text-color);
+          border-color: var(--border-color);
+      }
   }
 }
 
-/* 深色模式切換按鈕 */
+// --- 切換按鈕 (Theme Toggle) ---
 .theme-toggle {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  border-radius: 15px; // 圓角
+  bottom: 30px;
+  right: 30px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   border: none;
-  background: linear-gradient(135deg, #00838f, #4dd0e1);
-  color: white;
-  font-size: 1.5rem;
+  background: $primary-color;
+  color: #fff;
+  font-size: 1.4rem;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(0, 131, 143, 0.4);
-  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 184, 148, 0.4);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -212,72 +278,30 @@ $monospace: "JetBrains Mono", monospace;
 
   &:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(0, 131, 143, 0.6);
-  }
-
-  &:active {
-    transform: scale(0.95);
+    box-shadow: 0 6px 16px rgba(0, 184, 148, 0.6);
   }
 }
 
 [data-theme="dark"] .theme-toggle {
-  background: linear-gradient(135deg, #ffc107, #ffeb3b);
-  color: #1a1a2e;
-  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+  background: #ffbd59; // 溫暖的黃色，代表月亮/燈光
+  color: #121212;
+  box-shadow: 0 4px 12px rgba(255, 189, 89, 0.4);
 
   &:hover {
-    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.6);
+    box-shadow: 0 6px 16px rgba(255, 189, 89, 0.6);
   }
-}
-
-/* 現代化調整 */
-body {
-  font-size: 17px; // 稍微加大字體
-}
-
-.masthead__inner-wrap {
-  max-width: 100%;
-  padding: 0 2em;
-}
-
-.page {
-  float: none;
-  margin: 0 auto;
-}
-
-.page__content {
-  p, li {
-    line-height: 1.8; // 加大行高
-  }
-  h2 {
-    margin-top: 2.5em; // 加大標題上方間距
-    border-bottom-color: $primary-color; // 使用新的品牌色
-  }
-}
-
-.archive__item-title {
-  margin-top: 0.5em;
-  font-weight: 600;
-}
-
-// 圓角與陰影
-pre, code, .toc {
-  border-radius: 8px; // 圓角
-}
-
-.btn {
-  border-radius: 20px; // 膠囊按鈕
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 /* 響應式影片容器 */
 .responsive-video-container {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 比例 */
+  padding-bottom: 56.25%;
   height: 0;
   overflow: hidden;
   max-width: 100%;
   margin: 2em 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 
   iframe {
     position: absolute;
