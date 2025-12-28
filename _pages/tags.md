@@ -1,6 +1,6 @@
 ---
 title: "標籤"
 permalink: /tags/
-layout: page
+layout: tags
 author_profile: true
 ---

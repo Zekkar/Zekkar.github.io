@@ -1,6 +1,6 @@
 ---
 title: "文章分類"
 permalink: /categories/
-layout: page
+layout: categories
 author_profile: true
 ---

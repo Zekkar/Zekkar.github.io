@@ -1,6 +1,6 @@
 ---
 title: "所有文章"
 permalink: /posts/
-layout: page
+layout: posts
 author_profile: true
 ---

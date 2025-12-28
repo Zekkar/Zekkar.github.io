@@ -1,6 +1,6 @@
 ---
 title: "文章歸檔"
 permalink: /archive/
-layout: page
+layout: posts
 author_profile: true
 ---

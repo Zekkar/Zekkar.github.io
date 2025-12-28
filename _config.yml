@@ -1,4 +1,4 @@
-# Site settings
+# Jekyll 基本設定
 title: DS's Blog
 subtitle: 技術筆記與生活分享
 description: >-
@@ -6,71 +6,97 @@ description: >-
 url: "https://zekkar.github.io"
 baseurl: ""
 
-# Language settings (Critical for Mr. Green)
-lang: "zh-TW"
-timezone: Asia/Taipei
-encoding: "utf-8"
-
-# Author
+# 作者資訊
 author:
   name: DS
-  github: Zekkar
-  # picture: /assets/images/profile.jpg # 如果您有頭像圖片，請取消註解並確認路徑
+  location: "Taiwan"
+  links:
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/Zekkar"
 
-# Theme
-remote_theme: "MrGreensWorkshop/MrGreen-JekyllTheme"
+# 主題設定
+remote_theme: "mmistakes/minimal-mistakes@4.26.2"
+minimal_mistakes_skin: "aqua" # 可選: "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 
-# Theme Specific Settings
-theme_settings:
-  # Color scheme: "auto", "light", "dark"
-  color_scheme: "dark"
-  
-  # Layout
-  header_type: "fixed" # "static" or "fixed"
-  show_tags: true
-  show_categories: true
-  show_author: true
-  
-  # Navbar links
-  navbar:
-    - { title: "首頁", url: "/" }
-    - { title: "所有文章", url: "/posts/" }
-    - { title: "關於我", url: "/about/" }
-    - { title: "分類", url: "/categories/" }
-
-# Output
-permalink: /:year/:month/:day/:title/
+# 輸出設定
+permalink: /:categories/:title/
 paginate: 10
 paginate_path: /page:num/
+timezone: Asia/Taipei
 
-# Defaults
+# 預設設定
 defaults:
+  # 文章預設值
   - scope:
       path: ""
       type: posts
     values:
-      layout: post
+      layout: single
+      author_profile: true
       read_time: true
       comments: true
       share: true
       related: true
       show_date: true
       toc: true
+      toc_sticky: true
+  # 頁面預設值
   - scope:
       path: ""
       type: pages
     values:
-      layout: page
+      layout: single
+      author_profile: true
 
-# Plugins
+# 分類與標籤
+category_archive:
+  type: liquid
+  path: /categories/
+tag_archive:
+  type: liquid
+  path: /tags/
+
+# 搜尋功能
+search: true
+search_full_content: true
+
+# 導覽列
+header:
+  overlay_color: "#00838f"
+
+# 側邊欄
+sidebar:
+  nav: "main"
+
+# 留言系統（可稍後設定）
+comments:
+  provider: false
+
+# Mermaid 圖表支援
+after_footer_scripts:
+  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
+  - /assets/js/mermaid-init.js
+
+# Google Analytics 4
+analytics:
+  provider: "google-gtag"
+  google:
+    tracking_id: "G-H7VC2XRWBJ"
+    anonymize_ip: false
+
+# 外掛程式
 plugins:
-  - jekyll-remote-theme
-  - jekyll-paginate # 暫時停用以除錯
+  - jekyll-paginate
   - jekyll-sitemap
+  - jekyll-feed
   - jekyll-include-cache
-  - jekyll-seo-tag
 
-# Exclude
+# 包含 _pages 資料夾
+include:
+  - _pages
+
+# 排除建置的檔案
 exclude:
   - Gemfile
   - Gemfile.lock
