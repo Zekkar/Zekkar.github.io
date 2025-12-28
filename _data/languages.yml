@@ -1,0 +1,37 @@
+en:
+  post:
+    posted_on: "Posted on"
+    tags: "Tags"
+    categories: "Categories"
+    author: "Author"
+    share: "Share"
+    comments: "Comments"
+  page:
+    zen_mode: "Zen Mode"
+  other:
+    email: "Email"
+    read_more: "Read more..."
+    newer: "Newer"
+    older: "Older"
+    back_to_top: "Back to top"
+    search_results: "Search results"
+    no_results: "No results found"
+
+zh-TW:
+  post:
+    posted_on: "發布於"
+    tags: "標籤"
+    categories: "分類"
+    author: "作者"
+    share: "分享"
+    comments: "評論"
+  page:
+    zen_mode: "禪模式"
+  other:
+    email: "電子郵件"
+    read_more: "閱讀更多..."
+    newer: "較新"
+    older: "較舊"
+    back_to_top: "回到頂部"
+    search_results: "搜尋結果"
+    no_results: "找不到結果"

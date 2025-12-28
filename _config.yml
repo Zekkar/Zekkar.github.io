@@ -5,11 +5,13 @@ description: >-
   分享程式開發、技術心得，以及生活點滴的個人部落格。
 url: "https://zekkar.github.io"
 baseurl: ""
+lang: "zh-TW" # Mr. Green 需要語言設定
 
-# 作者資訊
+# 作者資訊 (調整為 Mr. Green 可能期望的結構)
 author:
   name: DS
   location: "Taiwan"
+  github: "Zekkar"
   links:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
@@ -17,7 +19,18 @@ author:
 
 # 主題設定
 remote_theme: "MrGreensWorkshop/MrGreen-JekyllTheme"
-# minimal_mistakes_skin: "aqua" # 已移除，新主題不適用
+
+# Mr. Green 主題特定設定 (參考範例)
+theme_settings:
+  color_scheme: "dark" # 鎖定深色模式
+  header_type: "fixed" # 或 "static"
+  show_tags: true
+  show_categories: true
+  show_author: true
+  share_links:
+    - twitter
+    - facebook
+    - linkedin
 
 # 輸出設定
 permalink: /:categories/:title/
@@ -27,27 +40,22 @@ timezone: Asia/Taipei
 
 # 預設設定
 defaults:
-  # 文章預設值
   - scope:
       path: ""
       type: posts
     values:
-      layout: post # 改為標準的 post
-      # author_profile: true # Minimal Mistakes 特有，先註解
+      layout: post
       read_time: true
       comments: true
       share: true
       related: true
       show_date: true
       toc: true
-      # toc_sticky: true # Minimal Mistakes 特有，先註解
-  # 頁面預設值
   - scope:
       path: ""
       type: pages
     values:
-      layout: page # 改為標準的 page
-      # author_profile: true
+      layout: page
 
 # 分類與標籤
 category_archive:
@@ -59,38 +67,15 @@ tag_archive:
 
 # 搜尋功能
 search: true
-search_full_content: true
 
-# 導覽列 (Minimal Mistakes 特有配置，先註解)
-# header:
-#   overlay_color: "#00838f"
-
-# 側邊欄 (Minimal Mistakes 特有配置，先註解)
-# sidebar:
-#   nav: "main"
-
-# 留言系統（可稍後設定）
-comments:
-  provider: false
-
-# Mermaid 圖表支援
-after_footer_scripts:
-  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
-  - /assets/js/mermaid-init.js
-
-# Google Analytics 4
-analytics:
-  provider: "google-gtag"
-  google:
-    tracking_id: "G-H7VC2XRWBJ"
-    anonymize_ip: false
-
-# 外掛程式
+# 插件設定
 plugins:
+  - jekyll-remote-theme
   - jekyll-paginate
   - jekyll-sitemap
   - jekyll-feed
   - jekyll-include-cache
+  - jekyll-seo-tag
 
 # 包含 _pages 資料夾
 include:
