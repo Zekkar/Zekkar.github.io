@@ -8,10 +8,10 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Noto+Sans+TC:wght@400;700&display=swap');
 
 // 1. 定義品牌色票
-$primary-color: #0097a7; // 一個更沉穩的青色
-$primary-color-light: #4dd0e1;
+$primary-color: #0277bd; // 藍色 (Light Blue 800)
+$primary-color-light: #4fc3f7; // 淺藍色 (Light Blue 300)
 $text-color-light: #333; // for light mode text
-$background-color-light: #fdfdfd; // for light mode background
+$background-color-light: #f1f8fe; // 極淺藍背景 (Light Blue 50)
 
 // 2. 覆寫主題預設變數 (亮色模式)
 $link-color: $primary-color;
@@ -199,11 +199,11 @@ $monospace: "JetBrains Mono", monospace;
   height: 50px;
   border-radius: 15px; // 圓角
   border: none;
-  background: linear-gradient(135deg, #00838f, #4dd0e1);
+  background: linear-gradient(135deg, #0277bd, #4fc3f7);
   color: white;
   font-size: 1.5rem;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(0, 131, 143, 0.4);
+  box-shadow: 0 4px 15px rgba(2, 119, 189, 0.4);
   transition: all 0.3s ease;
   z-index: 9999;
   display: flex;
@@ -212,7 +212,7 @@ $monospace: "JetBrains Mono", monospace;
 
   &:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(0, 131, 143, 0.6);
+    box-shadow: 0 6px 20px rgba(2, 119, 189, 0.6);
   }
 
   &:active {

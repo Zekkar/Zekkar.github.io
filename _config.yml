@@ -63,7 +63,7 @@ search_full_content: true
 
 # 導覽列
 header:
-  overlay_color: "#00838f"
+  overlay_color: "#0277bd"
 
 # 側邊欄
 sidebar:
