@@ -1,105 +1,161 @@
-# Jekyll 基本設定
+# Jekyll 設定
+lang: zh-TW
+timezone: Asia/Taipei
+
+# 網站資訊
 title: DS's Blog
-subtitle: 技術筆記與生活分享
+tagline: 技術筆記與生活分享
 description: >-
   分享程式開發、技術心得，以及生活點滴的個人部落格。
 url: "https://zekkar.github.io"
 baseurl: ""
 
-# 作者資訊
-author:
+# GitHub 資訊
+github:
+  username: Zekkar
+
+# 社交連結
+social:
   name: DS
-  location: "Taiwan"
+  email:
   links:
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/Zekkar"
+    - https://github.com/Zekkar
 
 # 主題設定
-remote_theme: "mmistakes/minimal-mistakes@4.26.2"
-minimal_mistakes_skin: "aqua" # 可選: "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
+theme: jekyll-theme-chirpy
+remote_theme: cotes2020/jekyll-theme-chirpy
 
-# 輸出設定
-permalink: /:categories/:title/
-paginate: 10
-paginate_path: /page:num/
-timezone: Asia/Taipei
+# Google Analytics
+google_analytics:
+  id: G-H7VC2XRWBJ
 
-# 預設設定
-defaults:
-  # 文章預設值
-  - scope:
-      path: ""
-      type: posts
-    values:
-      layout: single
-      author_profile: true
-      read_time: true
-      comments: true
-      share: true
-      related: true
-      show_date: true
-      toc: true
-      toc_sticky: true
-  # 頁面預設值
-  - scope:
-      path: ""
-      type: pages
-    values:
-      layout: single
-      author_profile: true
+# Webmaster 驗證（可選）
+# google_site_verification:
+# bing_site_verification:
 
-# 分類與標籤
-category_archive:
-  type: liquid
-  path: /categories/
-tag_archive:
-  type: liquid
-  path: /tags/
+# PageSpeed Insights（可選）
+# pwa:
+#   enabled: true
+#   cache:
+#     enabled: true
 
-# 搜尋功能
-search: true
-search_full_content: true
+# 頭像（建議 512x512 以上）
+# avatar: /assets/images/avatar.png
 
-# 導覽列
-header:
-  overlay_color: "#00838f"
+# TOC 設定
+toc: true
 
-# 側邊欄
-sidebar:
-  nav: "main"
-
-# 留言系統（可稍後設定）
+# 留言系統
 comments:
-  provider: false
+  active: # 選項: disqus, utterances, giscus
+  # Disqus
+  disqus:
+    shortname:
+  # Utterances
+  utterances:
+    repo:
+    issue_term: # pathname, url, title, og:title
+  # Giscus
+  giscus:
+    repo:
+    repo_id:
+    category:
+    category_id:
+    mapping:
+    input_position: # top, bottom
+    lang:
 
-# Mermaid 圖表支援
-after_footer_scripts:
-  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
-  - /assets/js/mermaid-init.js
-
-# Google Analytics 4
+# 網站分析（已用 Google Analytics）
 analytics:
-  provider: "google-gtag"
   google:
-    tracking_id: "G-H7VC2XRWBJ"
-    anonymize_ip: false
+    id: G-H7VC2XRWBJ
+  goatcounter:
+    id:
+
+# 深色模式偏好（可選：light, dark）
+# theme_mode: dark
+
+# CDN 設定
+cdn:
+
+# 自訂圖示（favicon）
+# img_cdn:
+
+# 預設圖片
+# img:
+#   avatar:
+#   social_preview:
+
+# 分頁
+paginate: 10
 
 # 外掛程式
 plugins:
   - jekyll-paginate
+  - jekyll-redirect-from
+  - jekyll-seo-tag
+  - jekyll-archives
   - jekyll-sitemap
-  - jekyll-feed
   - jekyll-include-cache
 
-# 包含 _pages 資料夾
-include:
-  - _pages
+# Jekyll Archives
+jekyll-archives:
+  enabled:
+    - categories
+    - tags
+  layouts:
+    category: category
+    tag: tag
+  permalinks:
+    tag: /tags/:name/
+    category: /categories/:name/
 
-# 排除建置的檔案
+# 預設值
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      comments: true
+      toc: true
+      permalink: /posts/:title/
+  - scope:
+      path: _drafts
+    values:
+      comments: false
+  - scope:
+      path: ""
+      type: tabs
+    values:
+      layout: page
+      permalink: /:title/
+
+# Sass
+sass:
+  style: compressed
+
+# 壓縮 HTML
+compress_html:
+  clippings: all
+  comments: all
+  endings: all
+  profile: false
+  blanklines: false
+  ignore:
+    envs: [development]
+
+# 排除檔案
 exclude:
+  - "*.gem"
+  - "*.gemspec"
+  - docs
+  - tools
+  - README.md
+  - LICENSE
+  - rollup.config.js
+  - package*.json
   - Gemfile
   - Gemfile.lock
   - node_modules
   - vendor
-  - README.md
