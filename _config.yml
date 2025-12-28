@@ -1,105 +1,86 @@
-# Jekyll 基本設定
+# The Site Configuration
+# Documentation: https://chirpy.cotes.page/posts/getting-started/
+
+# Site settings
 title: DS's Blog
-subtitle: 技術筆記與生活分享
+tagline: 技術筆記與生活分享
 description: >-
   分享程式開發、技術心得，以及生活點滴的個人部落格。
 url: "https://zekkar.github.io"
-baseurl: ""
-
-# 作者資訊
-author:
+github_username: Zekkar
+# twitter_username: twitter_handle
+social:
   name: DS
-  location: "Taiwan"
+  email: drake666lord@gmail.com
   links:
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/Zekkar"
+    - https://github.com/Zekkar
+    # - https://twitter.com/username
+    # - https://www.linkedin.com/in/username
 
-# 主題設定
-remote_theme: "mmistakes/minimal-mistakes@4.26.2"
-minimal_mistakes_skin: "aqua" # 可選: "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
-
-# 輸出設定
-permalink: /:categories/:title/
-paginate: 10
-paginate_path: /page:num/
+author: DS
 timezone: Asia/Taipei
 
-# 預設設定
-defaults:
-  # 文章預設值
-  - scope:
-      path: ""
-      type: posts
-    values:
-      layout: single
-      author_profile: true
-      read_time: true
-      comments: true
-      share: true
-      related: true
-      show_date: true
-      toc: true
-      toc_sticky: true
-  # 頁面預設值
-  - scope:
-      path: ""
-      type: pages
-    values:
-      layout: single
-      author_profile: true
+# Theme settings
+theme: jekyll-theme-chirpy
 
-# 分類與標籤
-category_archive:
-  type: liquid
-  path: /categories/
-tag_archive:
-  type: liquid
-  path: /tags/
+# Language
+lang: zh-TW
 
-# 搜尋功能
-search: true
-search_full_content: true
+# Pagination
+paginate: 10
+paginate_path: "/page:num/"
 
-# 導覽列
-header:
-  overlay_color: "#0277bd"
+# Assets
+avatar: /assets/images/profile.jpg # 您稍後可以上傳一張頭像到此路徑
+# banner:
+#   image: /assets/img/bg.jpg
 
-# 側邊欄
+# Sidebar
 sidebar:
-  nav: "main"
-
-# 留言系統（可稍後設定）
-comments:
-  provider: false
-
-# Mermaid 圖表支援
-after_footer_scripts:
-  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
-  - /assets/js/mermaid-init.js
-
-# Google Analytics 4
-analytics:
-  provider: "google-gtag"
+  display_author: true
+  
+# Search
+search:
+  provider: google
   google:
-    tracking_id: "G-H7VC2XRWBJ"
-    anonymize_ip: false
+    search_engine_id: # 您可以在這裡設定 Google Custom Search Engine ID (選擇性)
 
-# 外掛程式
+# Analytics
+google_analytics:
+  id: "G-H7VC2XRWBJ" # 您的 GA4 ID
+  pv:
+    proxy_url:
+    cache_path:
+
+# Comments
+disqus:
+  shortname: # 填入您的 Disqus shortname
+# utterances:
+#   repo: # <username>/<repo>
+# giscus:
+#   repo: # <username>/<repo>
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: /posts/:title/
+
+# Plugins
 plugins:
   - jekyll-paginate
   - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-archives
   - jekyll-feed
   - jekyll-include-cache
+  - jekyll-theme-chirpy
 
-# 包含 _pages 資料夾
-include:
-  - _pages
-
-# 排除建置的檔案
+# Exclude
 exclude:
   - Gemfile
   - Gemfile.lock
   - node_modules
   - vendor
   - README.md
+  - .github
+  - .gitignore
