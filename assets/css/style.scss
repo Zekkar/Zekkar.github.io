@@ -15,14 +15,14 @@
   --card-bg: #050505;
   --mask-bg: rgba(0, 0, 0, 0.9);
 
-  /* 主要強調色 - 霓虹青藍 (Cyber Blue) */
-  --link-color: #00f3ff;
-  --link-underline-color: #00f3ff;
-  --btn-share-hover-color: #00f3ff;
-  --tag-hover: #00f3ff;
-  --toc-highlight: #00f3ff;
-  --btn-backtotop-color: #00f3ff;
-  --sidebar-active-color: #00f3ff;
+  /* 主要強調色 - 深邃科技藍 (Deep Tech Blue) */
+  --link-color: #0088ff;
+  --link-underline-color: #0088ff;
+  --btn-share-hover-color: #0088ff;
+  --tag-hover: #0088ff;
+  --toc-highlight: #0088ff;
+  --btn-backtotop-color: #0088ff;
+  --sidebar-active-color: #0088ff;
   
   /* 文字顏色 - 高冷白與銀灰 */
   --text-color: #e6e6e6;
@@ -49,18 +49,18 @@ body {
 /* 側邊欄：增加右側邊框光暈 */
 #sidebar {
   border-right: 1px solid #111;
-  box-shadow: 1px 0 15px rgba(0, 243, 255, 0.05);
+  box-shadow: 1px 0 15px rgba(0, 136, 255, 0.05);
 }
 
 /* 頭像：增加藍色光環 */
 #avatar {
-  border: 2px solid #00f3ff;
-  box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+  border: 2px solid #0088ff;
+  box-shadow: 0 0 15px rgba(0, 136, 255, 0.3);
 }
 
 /* 網站標題 */
 .site-title {
-  text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+  text-shadow: 0 0 5px rgba(0, 136, 255, 0.5);
   letter-spacing: 1px;
 }
 
@@ -72,8 +72,8 @@ body {
 
 .post-preview:hover {
   background-color: #080808;
-  border-color: rgba(0, 243, 255, 0.4);
-  box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
+  border-color: rgba(0, 136, 255, 0.4);
+  box-shadow: 0 0 20px rgba(0, 136, 255, 0.15);
   transform: translateY(-2px);
 }
 
@@ -85,32 +85,32 @@ body {
 }
 
 .post-tags .post-tag:hover {
-  border-color: #00f3ff;
-  color: #00f3ff;
-  box-shadow: 0 0 8px rgba(0, 243, 255, 0.4);
-  background: rgba(0, 243, 255, 0.05);
+  border-color: #0088ff;
+  color: #0088ff;
+  box-shadow: 0 0 8px rgba(0, 136, 255, 0.4);
+  background: rgba(0, 136, 255, 0.05);
 }
 
 /* 搜尋欄 */
 #search-input {
   background-color: #0a0a0a;
   border: 1px solid #222;
-  color: #00f3ff;
+  color: #0088ff;
 }
 
 #search-input:focus {
-  border-color: #00f3ff;
-  box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+  border-color: #0088ff;
+  box-shadow: 0 0 10px rgba(0, 136, 255, 0.2);
 }
 
 /* 頂部進度條 */
 #topbar-wrapper {
-  border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 136, 255, 0.1);
 }
 
 /* 修正引用塊 (Blockquote) */
 blockquote {
-  border-left-color: #00f3ff;
-  background-color: rgba(0, 243, 255, 0.05);
+  border-left-color: #0088ff;
+  background-color: rgba(0, 136, 255, 0.05);
   color: #b0e0e6;
 }
