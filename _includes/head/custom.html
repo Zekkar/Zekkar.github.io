@@ -1,4 +1,235 @@
-<!-- 自訂內嵌樣式 - 深邃科技藍主題 -->
+<!-- 深色模式切換腳本 -->
+<script src="{{ '/assets/js/theme-toggle.js' | relative_url }}" defer></script>
+
+<!-- 防止閃爍：在頁面載入前先設定主題 -->
+<script>
+  (function() {
+    var theme = localStorage.getItem('theme');
+    if (theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>
+
+<!-- Mermaid 圖表支援 -->
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+  // 根據當前主題設定 Mermaid 主題
+  function getMermaidTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default';
+  }
+
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: getMermaidTheme(),
+    securityLevel: 'loose',
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis'
+    }
+  });
+
+  // 監聽主題切換，重新渲染 Mermaid
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.attributeName === 'data-theme') {
+        location.reload();
+      }
+    });
+  });
+  observer.observe(document.documentElement, { attributes: true });
+
+  // Mermaid 圖表點擊放大功能
+  document.addEventListener('DOMContentLoaded', function() {
+    // 建立 Modal 元素
+    const modal = document.createElement('div');
+    modal.id = 'mermaid-modal';
+    modal.innerHTML = `
+      <div class="mermaid-modal-overlay"></div>
+      <div class="mermaid-modal-content">
+        <button class="mermaid-modal-close">&times;</button>
+        <div class="mermaid-modal-body"></div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // 點擊關閉
+    modal.querySelector('.mermaid-modal-overlay').addEventListener('click', closeModal);
+    modal.querySelector('.mermaid-modal-close').addEventListener('click', closeModal);
+
+    // ESC 鍵關閉
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // 等待 Mermaid 渲染完成後綁定點擊事件
+    setTimeout(function() {
+      document.querySelectorAll('.mermaid').forEach(function(el) {
+        el.style.cursor = 'zoom-in';
+        el.title = '點擊放大';
+        el.addEventListener('click', function() {
+          const svg = el.querySelector('svg');
+          if (svg) {
+            const clone = svg.cloneNode(true);
+
+            // 取得 viewBox 來計算原始比例
+            const viewBox = svg.getAttribute('viewBox');
+            let svgWidth, svgHeight;
+
+            if (viewBox) {
+              const parts = viewBox.split(' ');
+              svgWidth = parseFloat(parts[2]);
+              svgHeight = parseFloat(parts[3]);
+            } else {
+              svgWidth = svg.getBoundingClientRect().width;
+              svgHeight = svg.getBoundingClientRect().height;
+            }
+
+            // 計算放大後的尺寸，盡量填滿螢幕
+            const maxW = window.innerWidth * 0.92;
+            const maxH = window.innerHeight * 0.88;
+            const ratio = svgWidth / svgHeight;
+
+            let newWidth, newHeight;
+            if (maxW / maxH > ratio) {
+              // 高度受限
+              newHeight = maxH;
+              newWidth = newHeight * ratio;
+            } else {
+              // 寬度受限
+              newWidth = maxW;
+              newHeight = newWidth / ratio;
+            }
+
+            // 強制設定放大尺寸
+            clone.removeAttribute('width');
+            clone.removeAttribute('height');
+            clone.removeAttribute('style');
+            clone.style.width = newWidth + 'px';
+            clone.style.height = newHeight + 'px';
+            clone.style.maxWidth = 'none';
+            clone.style.maxHeight = 'none';
+
+            modal.querySelector('.mermaid-modal-body').innerHTML = '';
+            modal.querySelector('.mermaid-modal-body').appendChild(clone);
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+          }
+        });
+      });
+    }, 1000);
+  });
+</script>
+
+<!-- Mermaid Modal 樣式 -->
+<style>
+  #mermaid-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+  }
+
+  #mermaid-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mermaid-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+  }
+
+  .mermaid-modal-content {
+    position: relative;
+    z-index: 1;
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    overflow: auto;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  [data-theme="dark"] .mermaid-modal-content {
+    background: #1a1a2e;
+  }
+
+  .mermaid-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+    line-height: 1;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+
+  .mermaid-modal-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #333;
+  }
+
+  [data-theme="dark"] .mermaid-modal-close {
+    color: #aaa;
+  }
+
+  [data-theme="dark"] .mermaid-modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+
+  .mermaid-modal-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 10px;
+  }
+
+  .mermaid-modal-body svg {
+    display: block;
+    max-width: none !important;
+    max-height: none !important;
+  }
+
+  /* 提示游標 */
+  .mermaid {
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .mermaid:hover {
+    box-shadow: 0 4px 20px rgba(0, 131, 143, 0.3);
+  }
+</style>
+
+<!-- 自訂配色 - 深邃科技藍主題 -->
 <style>
 [data-mode="dark"] {
   /* 主要強調色 - 深邃科技藍 */
