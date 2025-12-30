@@ -1,0 +1,116 @@
+---
+---
+
+@import "jekyll-theme-chirpy";
+
+/* Cyberpunk / Sci-Fi Theme Overrides */
+
+:root,
+[data-mode="dark"] {
+  /* 基礎背景色 - 極黑 */
+  --body-bg: #020202;
+  --sidebar-bg: #000000;
+  --topbar-wrapper-bg: rgba(0, 0, 0, 0.95);
+  --search-wrapper-bg: #050505;
+  --card-bg: #050505;
+  --mask-bg: rgba(0, 0, 0, 0.9);
+
+  /* 主要強調色 - 霓虹青藍 (Cyber Blue) */
+  --link-color: #00f3ff;
+  --link-underline-color: #00f3ff;
+  --btn-share-hover-color: #00f3ff;
+  --tag-hover: #00f3ff;
+  --toc-highlight: #00f3ff;
+  --btn-backtotop-color: #00f3ff;
+  --sidebar-active-color: #00f3ff;
+  
+  /* 文字顏色 - 高冷白與銀灰 */
+  --text-color: #e6e6e6;
+  --heading-color: #ffffff;
+  --text-muted-color: #8892b0;
+  
+  /* 邊框與線條 */
+  --card-border-color: #1a1a1a;
+  --sidebar-border-color: #1a1a1a;
+  --main-border-color: #1a1a1a;
+  
+  /* 程式碼區塊 - 深藍底 */
+  --code-header-bg: #0a0e14;
+  --code-block-bg: #05070a;
+}
+
+/* --- 額外科技感樣式增強 --- */
+
+body {
+  /* 嘗試使用科技感較重的字體堆疊 */
+  font-family: 'JetBrains Mono', 'Segoe UI Mono', 'Roboto Mono', monospace, sans-serif;
+}
+
+/* 側邊欄：增加右側邊框光暈 */
+#sidebar {
+  border-right: 1px solid #111;
+  box-shadow: 1px 0 15px rgba(0, 243, 255, 0.05);
+}
+
+/* 頭像：增加藍色光環 */
+#avatar {
+  border: 2px solid #00f3ff;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+}
+
+/* 網站標題 */
+.site-title {
+  text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+  letter-spacing: 1px;
+}
+
+/* 文章卡片：懸停時發光 */
+.post-preview {
+  border: 1px solid #111;
+  transition: all 0.3s ease;
+}
+
+.post-preview:hover {
+  background-color: #080808;
+  border-color: rgba(0, 243, 255, 0.4);
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* 標籤 (Tags) 樣式 */
+.post-tags .post-tag {
+  background: transparent;
+  border: 1px solid #333;
+  color: #8892b0;
+}
+
+.post-tags .post-tag:hover {
+  border-color: #00f3ff;
+  color: #00f3ff;
+  box-shadow: 0 0 8px rgba(0, 243, 255, 0.4);
+  background: rgba(0, 243, 255, 0.05);
+}
+
+/* 搜尋欄 */
+#search-input {
+  background-color: #0a0a0a;
+  border: 1px solid #222;
+  color: #00f3ff;
+}
+
+#search-input:focus {
+  border-color: #00f3ff;
+  box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+}
+
+/* 頂部進度條 */
+#topbar-wrapper {
+  border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+}
+
+/* 修正引用塊 (Blockquote) */
+blockquote {
+  border-left-color: #00f3ff;
+  background-color: rgba(0, 243, 255, 0.05);
+  color: #b0e0e6;
+}
