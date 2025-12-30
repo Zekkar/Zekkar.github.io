@@ -1,0 +1,28 @@
+/* 自訂顏色變數 - 深邃科技藍 */
+
+/* 深色模式配色 */
+[data-mode="dark"] {
+  /* 主要強調色 - 深邃科技藍 */
+  --link-color: #0088ff;
+  --link-underline-color: #0088ff;
+  --btn-share-hover-color: #0088ff;
+  --tag-hover: #0088ff;
+  --toc-highlight: #0088ff;
+  --btn-backtotop-color: #0088ff;
+  --sidebar-active-color: #0088ff;
+  --checkbox-checked-color: #0088ff;
+
+  /* 按鈕聚焦陰影 (使用深邃科技藍的 RGB 值: 0, 136, 255) */
+  --bs-btn-focus-shadow-rgb: 0, 136, 255;
+
+  /* Bootstrap 連結顏色 */
+  --bs-link-color: #0088ff;
+  --bs-link-hover-color: #3aa0ff;
+}
+
+/* 淺色模式配色 (如果需要) */
+[data-mode="light"] {
+  --link-color: #0066cc;
+  --toc-highlight: #0066cc;
+  --bs-link-color: #0066cc;
+}

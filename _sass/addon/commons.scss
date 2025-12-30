@@ -1,29 +1,7 @@
----
----
-
-/* 深邃科技藍主題 - 自訂樣式覆蓋 */
-/* 此檔案會覆蓋 Chirpy 主題的預設樣式 */
-
-@import "{{ site.theme }}";
+/* 深邃科技藍主題 - 視覺增強 */
 
 [data-mode="dark"] {
-  /* 主要強調色 - 深邃科技藍 */
-  --link-color: #0088ff !important;
-  --link-underline-color: #0088ff !important;
-  --btn-share-hover-color: #0088ff !important;
-  --tag-hover: #0088ff !important;
-  --toc-highlight: #0088ff !important;
-  --btn-backtotop-color: #0088ff !important;
-  --sidebar-active-color: #0088ff !important;
-  --checkbox-checked-color: #0088ff !important;
-  --bs-link-color: #0088ff !important;
-  --bs-link-hover-color: #3aa0ff !important;
-  --bs-btn-focus-shadow-rgb: 0, 136, 255 !important;
-}
-
-/* 視覺增強效果 */
-[data-mode="dark"] {
-  /* 側邊欄光暈 */
+  /* 側邊欄光暈效果 */
   #sidebar {
     box-shadow: 1px 0 15px rgba(0, 136, 255, 0.05);
   }
@@ -47,12 +25,12 @@
     transition: all 0.3s ease;
   }
 
-  /* 標籤懸停 */
+  /* 標籤懸停發光 */
   .post-tag:hover {
-    border-color: #0088ff !important;
-    color: #0088ff !important;
+    border-color: #0088ff;
+    color: #0088ff;
     box-shadow: 0 0 8px rgba(0, 136, 255, 0.4);
-    background: rgba(0, 136, 255, 0.05) !important;
+    background: rgba(0, 136, 255, 0.05);
   }
 
   /* 搜尋欄 */
@@ -76,7 +54,7 @@
     background-color: rgba(0, 136, 255, 0.05);
   }
 
-  /* 連結發光 */
+  /* 連結發光效果 */
   a:hover {
     text-shadow: 0 0 3px rgba(0, 136, 255, 0.3);
   }
