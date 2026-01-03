@@ -3,7 +3,105 @@
 
 @use 'main{%- if jekyll.environment == 'production' -%}.bundle{%- endif -%}';
 
-/* ========== 自訂樣式 - 深邃科技藍主題（層次增強版） ========== */
+/* ========== 自訂樣式 - Motion-Driven 動態科技主題 ========== */
+
+/* ========== 關鍵影格動畫定義 ========== */
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(0, 136, 255, 0.3),
+                0 0 30px rgba(0, 136, 255, 0.2),
+                0 0 45px rgba(0, 136, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(0, 136, 255, 0.5),
+                0 0 50px rgba(0, 136, 255, 0.3),
+                0 0 75px rgba(0, 136, 255, 0.2);
+  }
+}
+
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes particles {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(50px);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 
 [data-mode="dark"] {
   /* 主要強調色 - 深邃科技藍 */
@@ -37,15 +135,42 @@
 
 /* ========== 背景與整體氛圍 ========== */
 
-/* 主體背景 - 深空漸層 */
+/* 主體背景 - 動態漸層 */
 [data-mode="dark"] body {
-  background: linear-gradient(135deg, #0a0e17 0%, #050810 50%, #0a0e17 100%);
-  background-attachment: fixed;
+  background: linear-gradient(-45deg, #0a0e17, #050810, #0d1117, #0a0e17);
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 動態粒子背景層 */
+[data-mode="dark"] body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, rgba(0, 136, 255, 0.3), transparent),
+    radial-gradient(2px 2px at 60% 70%, rgba(0, 136, 255, 0.2), transparent),
+    radial-gradient(1px 1px at 50% 50%, rgba(0, 136, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 80% 10%, rgba(0, 136, 255, 0.2), transparent),
+    radial-gradient(2px 2px at 90% 60%, rgba(0, 136, 255, 0.25), transparent),
+    radial-gradient(1px 1px at 33% 85%, rgba(0, 136, 255, 0.2), transparent),
+    radial-gradient(1px 1px at 75% 40%, rgba(0, 136, 255, 0.3), transparent);
+  background-size: 200% 200%;
+  animation: gradient-shift 20s ease infinite;
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* 主內容區 */
 [data-mode="dark"] #main-wrapper {
   background: transparent;
+  position: relative;
+  z-index: 2;
 }
 
 /* ========== 側邊欄科技感增強 ========== */
@@ -57,16 +182,20 @@
     1px 0 20px rgba(0, 136, 255, 0.1),
     inset -1px 0 0 rgba(0, 136, 255, 0.1);
   backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 3;
+  animation: slide-in-right 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 頭像 - 多層發光 */
+/* 頭像 - 多層發光 + 脈衝動畫 */
 [data-mode="dark"] #avatar {
   border: 2px solid #0088ff;
   box-shadow:
     0 0 15px rgba(0, 136, 255, 0.5),
     0 0 30px rgba(0, 136, 255, 0.3),
     0 0 45px rgba(0, 136, 255, 0.1);
-  transition: all 0.3s ease;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  animation: pulse-glow 3s ease-in-out infinite;
 }
 
 [data-mode="dark"] #avatar:hover {
@@ -74,59 +203,100 @@
     0 0 20px rgba(0, 136, 255, 0.7),
     0 0 40px rgba(0, 136, 255, 0.5),
     0 0 60px rgba(0, 136, 255, 0.3);
-  transform: scale(1.05);
+  transform: scale(1.1) rotate(5deg);
+  animation: none;
 }
 
-/* 網站標題 - 漸層發光 */
+/* 網站標題 - 動態漸層發光 */
 [data-mode="dark"] .site-title {
-  background: linear-gradient(135deg, #0088ff 0%, #00d4ff 100%);
+  background: linear-gradient(135deg, #0088ff 0%, #00d4ff 50%, #0088ff 100%);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: drop-shadow(0 0 8px rgba(0, 136, 255, 0.5));
   font-weight: 600;
   letter-spacing: 0.5px;
+  animation: shimmer 3s linear infinite, float 4s ease-in-out infinite;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-/* 網站副標題 */
+[data-mode="dark"] .site-title:hover {
+  filter: drop-shadow(0 0 15px rgba(0, 136, 255, 0.8));
+  transform: scale(1.05);
+}
+
+/* 網站副標題 - 淡入動畫 */
 [data-mode="dark"] .site-subtitle {
   color: #8b949e;
   font-style: italic;
+  animation: slide-in-up 1s ease 0.3s backwards;
 }
 
-/* 側邊欄導航 */
+/* 側邊欄導航 - 彈性動畫 */
 [data-mode="dark"] #sidebar .nav-link {
   color: #8b949e;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   border-left: 2px solid transparent;
   padding-left: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-mode="dark"] #sidebar .nav-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, #0088ff, #00d4ff);
+  transform: scaleY(0);
+  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 [data-mode="dark"] #sidebar .nav-link:hover {
   color: #0088ff;
   background: rgba(0, 136, 255, 0.05);
-  border-left-color: #0088ff;
-  padding-left: 22px;
+  border-left-color: transparent;
+  padding-left: 26px;
+  transform: translateX(4px);
+}
+
+[data-mode="dark"] #sidebar .nav-link:hover::before {
+  transform: scaleY(1);
 }
 
 [data-mode="dark"] #sidebar .nav-link.active {
   color: #0088ff;
   background: rgba(0, 136, 255, 0.1);
-  border-left-color: #0088ff;
+  border-left-color: transparent;
 }
 
-/* ========== 文章卡片層次感 ========== */
+[data-mode="dark"] #sidebar .nav-link.active::before {
+  transform: scaleY(1);
+}
+
+/* ========== 文章卡片層次感 + 動態效果 ========== */
 
 [data-mode="dark"] .card-wrapper {
   background: linear-gradient(135deg, rgba(13,17,23,0.8) 0%, rgba(10,14,23,0.9) 100%);
   border: 1px solid rgba(0, 136, 255, 0.15);
   backdrop-filter: blur(10px);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   position: relative;
   overflow: hidden;
+  animation: slide-in-up 0.6s ease backwards;
 }
 
-/* 卡片發光邊框效果 */
+/* 為每個卡片添加延遲動畫 */
+[data-mode="dark"] .card-wrapper:nth-child(1) { animation-delay: 0.1s; }
+[data-mode="dark"] .card-wrapper:nth-child(2) { animation-delay: 0.2s; }
+[data-mode="dark"] .card-wrapper:nth-child(3) { animation-delay: 0.3s; }
+[data-mode="dark"] .card-wrapper:nth-child(4) { animation-delay: 0.4s; }
+[data-mode="dark"] .card-wrapper:nth-child(5) { animation-delay: 0.5s; }
+
+/* 卡片發光邊框掃描效果 */
 [data-mode="dark"] .card-wrapper::before {
   content: '';
   position: absolute;
@@ -134,35 +304,60 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 136, 255, 0.1), transparent);
-  transition: left 0.5s ease;
+  background: linear-gradient(90deg, transparent, rgba(0, 136, 255, 0.2), transparent);
+  transition: left 0.7s ease;
+  z-index: 1;
 }
 
 [data-mode="dark"] .card-wrapper:hover::before {
   left: 100%;
 }
 
+/* 卡片邊角發光效果 */
+[data-mode="dark"] .card-wrapper::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 136, 255, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  z-index: 0;
+}
+
+[data-mode="dark"] .card-wrapper:hover::after {
+  opacity: 1;
+  transform: translate(-25%, -25%);
+}
+
 [data-mode="dark"] .card-wrapper:hover {
-  border-color: rgba(0, 136, 255, 0.4);
+  border-color: rgba(0, 136, 255, 0.5);
   background: linear-gradient(135deg, rgba(13,17,23,0.95) 0%, rgba(10,14,23,1) 100%);
   box-shadow:
-    0 8px 30px rgba(0, 136, 255, 0.2),
-    0 0 0 1px rgba(0, 136, 255, 0.1);
-  transform: translateY(-4px);
+    0 12px 40px rgba(0, 136, 255, 0.3),
+    0 0 0 1px rgba(0, 136, 255, 0.2),
+    inset 0 1px 0 rgba(0, 136, 255, 0.1);
+  transform: translateY(-8px) scale(1.02);
 }
 
 /* ========== 標題層次 ========== */
 
-/* 文章標題 */
+/* 文章標題 - 動態發光效果 */
 [data-mode="dark"] .card-title {
   color: #e6edf3;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+  z-index: 2;
 }
 
 [data-mode="dark"] .card-wrapper:hover .card-title {
   color: #0088ff;
-  text-shadow: 0 0 10px rgba(0, 136, 255, 0.3);
+  text-shadow: 0 0 15px rgba(0, 136, 255, 0.5);
+  transform: translateX(5px);
+  letter-spacing: 0.5px;
 }
 
 /* 頁面主標題 */
@@ -185,7 +380,7 @@
   background: linear-gradient(90deg, #0088ff, transparent);
 }
 
-/* ========== 標籤系統 ========== */
+/* ========== 標籤系統 - 動態微互動 ========== */
 
 [data-mode="dark"] .post-tag {
   background: rgba(0, 136, 255, 0.1);
@@ -193,38 +388,70 @@
   color: #0088ff;
   padding: 4px 12px;
   border-radius: 4px;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+}
+
+/* 標籤發光效果 */
+[data-mode="dark"] .post-tag::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(0, 136, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
 }
 
 [data-mode="dark"] .post-tag:hover {
   background: rgba(0, 136, 255, 0.2);
   border-color: #0088ff;
   box-shadow:
-    0 0 12px rgba(0, 136, 255, 0.4),
-    inset 0 0 8px rgba(0, 136, 255, 0.1);
-  transform: translateY(-2px);
+    0 0 15px rgba(0, 136, 255, 0.5),
+    inset 0 0 12px rgba(0, 136, 255, 0.2);
+  transform: translateY(-3px) scale(1.05);
 }
 
-/* ========== 搜尋欄增強 ========== */
+[data-mode="dark"] .post-tag:hover::before {
+  width: 200%;
+  height: 200%;
+}
+
+/* ========== 搜尋欄增強 - 動態互動 ========== */
 
 [data-mode="dark"] #search-input {
   background: rgba(13, 17, 23, 0.8);
   border: 1px solid rgba(0, 136, 255, 0.3);
   color: #c9d1d9;
   backdrop-filter: blur(10px);
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
 }
 
 [data-mode="dark"] #search-input::placeholder {
   color: #8b949e;
+  transition: all 0.3s ease;
+}
+
+[data-mode="dark"] #search-input:focus::placeholder {
+  transform: translateX(5px);
+  opacity: 0.5;
 }
 
 [data-mode="dark"] #search-input:focus {
   background: rgba(13, 17, 23, 0.95);
   border-color: #0088ff;
   box-shadow:
-    0 0 15px rgba(0, 136, 255, 0.3),
-    inset 0 0 10px rgba(0, 136, 255, 0.05);
+    0 0 20px rgba(0, 136, 255, 0.4),
+    0 0 40px rgba(0, 136, 255, 0.2),
+    inset 0 0 15px rgba(0, 136, 255, 0.1);
   color: #0088ff;
+  transform: scale(1.02);
 }
 
 /* ========== 頂部欄 ========== */
@@ -263,34 +490,51 @@
   box-shadow: inset 3px 0 10px rgba(0, 136, 255, 0.1);
 }
 
-/* ========== 按鈕與互動元素 ========== */
+/* ========== 按鈕與互動元素 - 彈性動畫 ========== */
 
-/* 返回頂部按鈕 */
+/* 返回頂部按鈕 - 浮動脈衝效果 */
 [data-mode="dark"] #back-to-top {
   background: rgba(0, 136, 255, 0.1);
   border: 1px solid rgba(0, 136, 255, 0.3);
   color: #0088ff;
   backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  animation: float 3s ease-in-out infinite;
 }
 
 [data-mode="dark"] #back-to-top:hover {
-  background: rgba(0, 136, 255, 0.2);
+  background: rgba(0, 136, 255, 0.3);
   border-color: #0088ff;
   box-shadow:
-    0 0 20px rgba(0, 136, 255, 0.5),
-    0 0 40px rgba(0, 136, 255, 0.3);
-  transform: translateY(-3px);
+    0 0 25px rgba(0, 136, 255, 0.6),
+    0 0 50px rgba(0, 136, 255, 0.4),
+    inset 0 0 20px rgba(0, 136, 255, 0.2);
+  transform: translateY(-5px) scale(1.1) rotate(5deg);
+  animation: none;
 }
 
-/* ========== 連結發光效果 ========== */
+/* ========== 連結動態發光效果 ========== */
 
 [data-mode="dark"] a {
   transition: all 0.3s ease;
+  position: relative;
 }
 
 [data-mode="dark"] a:hover {
-  text-shadow: 0 0 8px rgba(0, 136, 255, 0.5);
+  text-shadow: 0 0 10px rgba(0, 136, 255, 0.6);
+}
+
+/* 連結下劃線動畫 */
+[data-mode="dark"] .post-content a:not(.post-tag) {
+  background-image: linear-gradient(90deg, #0088ff, #00d4ff);
+  background-size: 0% 2px;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  transition: background-size 0.4s ease;
+}
+
+[data-mode="dark"] .post-content a:not(.post-tag):hover {
+  background-size: 100% 2px;
 }
 
 /* ========== 分隔線 ========== */
@@ -313,4 +557,196 @@
   font-size: 0.85rem;
   letter-spacing: 1px;
   margin-bottom: 15px;
+  animation: slide-in-up 0.8s ease backwards;
+}
+
+/* ========== 額外的微互動效果 ========== */
+
+/* 按鈕點擊漣漪效果 */
+[data-mode="dark"] button,
+[data-mode="dark"] .btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+[data-mode="dark"] button:active,
+[data-mode="dark"] .btn:active {
+  transform: scale(0.95);
+}
+
+/* 圖片 hover 效果 */
+[data-mode="dark"] img {
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+[data-mode="dark"] img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(0, 136, 255, 0.3);
+}
+
+/* 程式碼區塊 hover 效果 */
+[data-mode="dark"] .highlight:hover {
+  border-color: rgba(0, 136, 255, 0.4);
+  box-shadow:
+    inset 0 0 30px rgba(0, 136, 255, 0.1),
+    0 0 20px rgba(0, 136, 255, 0.2);
+  transform: scale(1.01);
+}
+
+/* 列表項目動畫 */
+[data-mode="dark"] li {
+  transition: all 0.3s ease;
+}
+
+[data-mode="dark"] .post-content li:hover {
+  transform: translateX(5px);
+  color: #0088ff;
+}
+
+/* 表格 hover 效果 */
+[data-mode="dark"] table tr {
+  transition: all 0.3s ease;
+}
+
+[data-mode="dark"] table tr:hover {
+  background: rgba(0, 136, 255, 0.05);
+  box-shadow: inset 3px 0 0 #0088ff;
+}
+
+/* ========== 滾動進度指示器 ========== */
+
+[data-mode="dark"] #scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, #0088ff, #00d4ff);
+  box-shadow: 0 0 10px rgba(0, 136, 255, 0.5);
+  z-index: 9999;
+  transition: width 0.1s ease;
+}
+
+/* ========== 視差滾動效果（輕量級） ========== */
+
+[data-mode="dark"] .parallax-element {
+  transition: transform 0.3s ease-out;
+}
+
+/* ========== 載入動畫 ========== */
+
+[data-mode="dark"] .loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========== 彈出動畫 ========== */
+
+[data-mode="dark"] .modal,
+[data-mode="dark"] .popup {
+  animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ========== 時間軸動畫 ========== */
+
+[data-mode="dark"] .timeline-item {
+  opacity: 0;
+  animation: slide-in-right 0.6s ease forwards;
+}
+
+[data-mode="dark"] .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+[data-mode="dark"] .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+[data-mode="dark"] .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+[data-mode="dark"] .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+[data-mode="dark"] .timeline-item:nth-child(5) { animation-delay: 0.5s; }
+
+/* ========== 平滑滾動 ========== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ========== 選取文字效果 ========== */
+
+[data-mode="dark"] ::selection {
+  background: rgba(0, 136, 255, 0.3);
+  color: #00d4ff;
+  text-shadow: 0 0 10px rgba(0, 136, 255, 0.5);
+}
+
+/* ========== 焦點環效果 ========== */
+
+[data-mode="dark"] *:focus-visible {
+  outline: 2px solid #0088ff;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(0, 136, 255, 0.2);
+}
+
+/* ========== 頁面元素進場動畫 ========== */
+
+[data-mode="dark"] #core-wrapper > * {
+  animation: slide-in-up 0.8s ease backwards;
+}
+
+[data-mode="dark"] #core-wrapper > *:nth-child(1) { animation-delay: 0.1s; }
+[data-mode="dark"] #core-wrapper > *:nth-child(2) { animation-delay: 0.2s; }
+[data-mode="dark"] #core-wrapper > *:nth-child(3) { animation-delay: 0.3s; }
+
+/* ========== 游標追隨效果（可選，輕量級）========== */
+
+[data-mode="dark"] body {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><circle cx="10" cy="10" r="8" fill="rgba(0,136,255,0.2)" stroke="%230088ff" stroke-width="1"/></svg>'), auto;
+}
+
+[data-mode="dark"] a,
+[data-mode="dark"] button {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><circle cx="12" cy="12" r="10" fill="rgba(0,136,255,0.4)" stroke="%2300d4ff" stroke-width="2"/></svg>'), pointer;
+}
+
+/* ========== 動態陰影效果 ========== */
+
+@keyframes shadow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 136, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(0, 136, 255, 0.4);
+  }
+}
+
+[data-mode="dark"] .featured-item {
+  animation: shadow-pulse 3s ease-in-out infinite;
+}
+
+/* ========== 響應式動畫優化 ========== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========== 性能優化：GPU 加速 ========== */
+
+[data-mode="dark"] .card-wrapper,
+[data-mode="dark"] #sidebar,
+[data-mode="dark"] #avatar,
+[data-mode="dark"] .post-tag,
+[data-mode="dark"] #back-to-top {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
