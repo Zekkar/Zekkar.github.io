@@ -14,7 +14,7 @@ toc_sticky: true
 
 ## 系統架構圖
 
-<pre class="mermaid">
+```mermaid
 graph TD
     %% 定義風格 (CSS Classes)
     classDef layer fill:#f0f8ff,stroke:#333,stroke-width:2px;
@@ -71,7 +71,7 @@ graph TD
     Redis -- "Redis 訂閱 (T 字報價)" --> ForceRecorder
     DualSell -- "策略狀態發布 (Pub/Sub)" --> Redis
     DualSell -- "通知請求" --> Notification
-</pre>
+```
 
 ## 架構說明
 
