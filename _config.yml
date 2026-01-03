@@ -74,10 +74,6 @@ analytics:
 # 深色模式偏好（可選：light, dark）
 theme_mode: dark
 
-# Mermaid 圖表支援
-mermaid:
-  enable: true
-
 # CDN 設定
 cdn:
 

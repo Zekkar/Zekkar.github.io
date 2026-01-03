@@ -10,6 +10,7 @@ tags:
 excerpt: "ShioajiPy 系統架構設計文檔，包含前端、API Gateway、核心微服務層與資料來源層的完整架構圖。"
 toc: true
 toc_sticky: true
+mermaid: true
 ---
 
 ## 系統架構圖

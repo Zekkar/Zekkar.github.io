@@ -289,16 +289,16 @@
   animation: slide-in-up 0.6s ease backwards;
 }
 
-/* 確保卡片內的主連結覆蓋整個卡片區域 */
+/* 確保卡片內的主連結覆蓋整個卡片區域並在動畫層之上 */
 [data-mode="dark"] .card-wrapper > a.post-preview {
   display: block;
   text-decoration: none;
   color: inherit;
   cursor: pointer;
   min-height: 100%;
+  position: relative;
+  z-index: 2;
 }
-
-/* 移除之前錯誤的 CSS（不需要了） */
 
 /* 為每個卡片添加延遲動畫 */
 [data-mode="dark"] .card-wrapper:nth-child(1) { animation-delay: 0.1s; }
@@ -307,7 +307,7 @@
 [data-mode="dark"] .card-wrapper:nth-child(4) { animation-delay: 0.4s; }
 [data-mode="dark"] .card-wrapper:nth-child(5) { animation-delay: 0.5s; }
 
-/* 卡片發光邊框掃描效果 */
+/* 卡片發光邊框掃描效果 - 不阻擋點擊 */
 [data-mode="dark"] .card-wrapper::before {
   content: '';
   position: absolute;
@@ -318,13 +318,14 @@
   background: linear-gradient(90deg, transparent, rgba(0, 136, 255, 0.2), transparent);
   transition: left 0.7s ease;
   z-index: 1;
+  pointer-events: none;
 }
 
 [data-mode="dark"] .card-wrapper:hover::before {
   left: 100%;
 }
 
-/* 卡片邊角發光效果 */
+/* 卡片邊角發光效果 - 不阻擋點擊 */
 [data-mode="dark"] .card-wrapper::after {
   content: '';
   position: absolute;
@@ -336,6 +337,7 @@
   opacity: 0;
   transition: opacity 0.5s ease, transform 0.5s ease;
   z-index: 0;
+  pointer-events: none;
 }
 
 [data-mode="dark"] .card-wrapper:hover::after {
@@ -361,7 +363,6 @@
   font-weight: 600;
   transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   position: relative;
-  z-index: 2;
 }
 
 [data-mode="dark"] .card-wrapper:hover .card-title {
