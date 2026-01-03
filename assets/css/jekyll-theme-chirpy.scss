@@ -287,26 +287,18 @@
   position: relative;
   overflow: hidden;
   animation: slide-in-up 0.6s ease backwards;
+}
+
+/* 確保卡片內的主連結覆蓋整個卡片區域 */
+[data-mode="dark"] .card-wrapper > a.post-preview {
+  display: block;
+  text-decoration: none;
+  color: inherit;
   cursor: pointer;
+  min-height: 100%;
 }
 
-/* 讓整個卡片可點擊 - 使用偽元素擴展標題連結的點擊區域 */
-[data-mode="dark"] .card-wrapper .card-title a::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
-}
-
-/* 確保卡片內其他連結仍可點擊 */
-[data-mode="dark"] .card-wrapper .post-tag,
-[data-mode="dark"] .card-wrapper .post-meta a {
-  position: relative;
-  z-index: 2;
-}
+/* 移除之前錯誤的 CSS（不需要了） */
 
 /* 為每個卡片添加延遲動畫 */
 [data-mode="dark"] .card-wrapper:nth-child(1) { animation-delay: 0.1s; }
