@@ -4,7 +4,29 @@
       "Bash(git add:*)",
       "Bash(git commit -m \"$(cat <<''EOF''\nSetup Jekyll blog with Minimal Mistakes theme\n\n- Add Jekyll configuration with Minimal Mistakes remote theme\n- Create sample blog posts (welcome and tutorial)\n- Add pages: about, categories, tags, posts\n- Configure navigation menu\n- Add GitHub Actions workflow for automatic deployment\n- Update index.html as homepage\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git push:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "WebSearch",
+      "Bash(cp:*)",
+      "Bash(bundle install:*)",
+      "Bash(git rm:*)",
+      "Bash(gh run view:*)",
+      "Bash(ls:*)",
+      "Bash(gh api:*)",
+      "Bash(gh workflow run:*)",
+      "Bash(gh run:*)",
+      "WebFetch(domain:zekkar.github.io)",
+      "Bash(bundle show:*)",
+      "Bash(gem which:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:chirpy.cotes.page)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl:*)",
+      "Bash(git restore:*)",
+      "Bash(tr:*)",
+      "Bash(uipro init:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_close"
     ]
   }
 }
