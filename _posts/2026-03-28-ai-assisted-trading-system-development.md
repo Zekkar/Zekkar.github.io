@@ -27,26 +27,7 @@ mermaid: true
 
 ## 流程全景
 
-```mermaid
-flowchart TD
-    A[📱 Telegram 指令] --> B[Phase 0: 影響分析]
-    B --> C[Phase 1: 測試情境生成]
-    C --> D[Phase 2: 實作 + 驗證]
-    D --> E[Phase 2.5: 合約驗證]
-    E --> F[Phase 3: E2E 驗證]
-    F --> G[Phase 4: 自癒驗證]
-    G --> H{通過?}
-    H -->|否| I[自動修復]
-    I --> G
-    H -->|是| J[Phase 5: 知識沉澱]
-    J --> K[📱 Telegram 回報]
-
-    style A fill:#667eea,stroke:#333,color:#fff
-    style G fill:#f5576c,stroke:#333,color:#fff
-    style I fill:#ffa94d,stroke:#333,color:#fff
-    style J fill:#43e97b,stroke:#333,color:#fff
-    style K fill:#667eea,stroke:#333,color:#fff
-```
+<img src="/assets/images/2026-03-28/self-healing-overview.svg" alt="自癒式開發流程全景" width="100%">
 
 **最低要求**：Phase 0 + 實作 + Phase 4（影響分析 + 實作 + 自癒驗證）
 

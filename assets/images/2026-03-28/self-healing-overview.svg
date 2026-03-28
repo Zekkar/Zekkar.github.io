@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 400" font-family="'Noto Sans TC', 'Segoe UI', sans-serif">
+  <defs>
+    <filter id="s"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#667eea"/><stop offset="100%" stop-color="#764ba2"/></linearGradient>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f093fb"/><stop offset="100%" stop-color="#f5576c"/></linearGradient>
+    <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#4facfe"/><stop offset="100%" stop-color="#00f2fe"/></linearGradient>
+    <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#43e97b"/><stop offset="100%" stop-color="#38f9d7"/></linearGradient>
+    <linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#fa709a"/><stop offset="100%" stop-color="#fee140"/></linearGradient>
+    <linearGradient id="g6" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#a18cd1"/><stop offset="100%" stop-color="#fbc2eb"/></linearGradient>
+    <marker id="ar" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#aaa"/></marker>
+  </defs>
+
+  <rect width="860" height="400" rx="16" fill="#f8f9fc"/>
+  <text x="430" y="38" text-anchor="middle" font-size="19" font-weight="bold" fill="#1a1a2e">自癒式開發流程全景</text>
+  <text x="430" y="58" text-anchor="middle" font-size="12" fill="#888">需求即測試 / 自動診斷 / 自癒修復 / 知識沉澱</text>
+
+  <!-- Row 1: Main Pipeline -->
+  <!-- Phase: Telegram -->
+  <g filter="url(#s)"><rect x="20" y="85" width="110" height="65" rx="12" fill="url(#g1)"/>
+    <text x="75" y="112" text-anchor="middle" font-size="20" fill="white">&#x1F4F1;</text>
+    <text x="75" y="135" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Telegram</text>
+  </g>
+  <line x1="130" y1="117" x2="148" y2="117" stroke="#aaa" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- Phase 0 -->
+  <g filter="url(#s)"><rect x="152" y="85" width="110" height="65" rx="12" fill="url(#g2)"/>
+    <text x="207" y="108" text-anchor="middle" font-size="10" font-weight="bold" fill="white">PHASE 0</text>
+    <text x="207" y="125" text-anchor="middle" font-size="12" fill="white">影響分析</text>
+    <text x="207" y="141" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.7)">import / Pub-Sub / API</text>
+  </g>
+  <line x1="262" y1="117" x2="280" y2="117" stroke="#aaa" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- Phase 1 -->
+  <g filter="url(#s)"><rect x="284" y="85" width="110" height="65" rx="12" fill="url(#g3)"/>
+    <text x="339" y="108" text-anchor="middle" font-size="10" font-weight="bold" fill="white">PHASE 1</text>
+    <text x="339" y="125" text-anchor="middle" font-size="12" fill="white">測試情境</text>
+    <text x="339" y="141" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.7)">BDD Feature 生成</text>
+  </g>
+  <line x1="394" y1="117" x2="412" y2="117" stroke="#aaa" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- Phase 2 -->
+  <g filter="url(#s)"><rect x="416" y="85" width="110" height="65" rx="12" fill="url(#g4)"/>
+    <text x="471" y="108" text-anchor="middle" font-size="10" font-weight="bold" fill="white">PHASE 2</text>
+    <text x="471" y="125" text-anchor="middle" font-size="12" fill="#1a1a2e">實作 + 驗證</text>
+    <text x="471" y="141" text-anchor="middle" font-size="9" fill="rgba(0,0,0,0.5)">Brainstorm / Subagent</text>
+  </g>
+  <line x1="526" y1="117" x2="544" y2="117" stroke="#aaa" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- Phase 3 -->
+  <g filter="url(#s)"><rect x="548" y="85" width="110" height="65" rx="12" fill="url(#g5)"/>
+    <text x="603" y="108" text-anchor="middle" font-size="10" font-weight="bold" fill="white">PHASE 3</text>
+    <text x="603" y="125" text-anchor="middle" font-size="12" fill="white">E2E 驗證</text>
+    <text x="603" y="141" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.7)">Playwright + 合約</text>
+  </g>
+  <line x1="658" y1="117" x2="676" y2="117" stroke="#aaa" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- Phase 4: Self-Heal (highlighted) -->
+  <g filter="url(#s)"><rect x="680" y="75" width="155" height="85" rx="14" fill="#1a1a2e" stroke="#f5576c" stroke-width="2"/>
+    <text x="757" y="100" text-anchor="middle" font-size="10" font-weight="bold" fill="#f5576c">PHASE 4</text>
+    <text x="757" y="120" text-anchor="middle" font-size="14" font-weight="bold" fill="white">自癒驗證</text>
+    <text x="757" y="138" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.6)">Seq + Tempo + Docker</text>
+    <text x="757" y="152" text-anchor="middle" font-size="9" fill="#f5576c">最多 3 次自動修復</text>
+  </g>
+
+  <!-- Self-heal loop arrow -->
+  <path d="M757,160 C757,185 810,185 810,130 C810,95 790,85 770,85" stroke="#f5576c" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#ar)"/>
+
+  <!-- Row 2: Deploy Pipeline -->
+  <g filter="url(#s)"><rect x="20" y="195" width="815" height="75" rx="12" fill="white" stroke="#e0e6ed" stroke-width="1"/>
+    <text x="50" y="220" font-size="13" font-weight="bold" fill="#1a1a2e">任務完成閉環</text>
+
+    <rect x="45" y="235" width="85" height="28" rx="6" fill="#667eea" opacity="0.15"/>
+    <text x="87" y="254" text-anchor="middle" font-size="10" fill="#667eea" font-weight="bold">VERSION +1</text>
+
+    <text x="142" y="254" font-size="12" fill="#ccc">&#x2192;</text>
+
+    <rect x="155" y="235" width="95" height="28" rx="6" fill="#667eea" opacity="0.15"/>
+    <text x="202" y="254" text-anchor="middle" font-size="10" fill="#667eea" font-weight="bold">CHANGELOG</text>
+
+    <text x="262" y="254" font-size="12" fill="#ccc">&#x2192;</text>
+
+    <rect x="275" y="235" width="85" height="28" rx="6" fill="#4facfe" opacity="0.15"/>
+    <text x="317" y="254" text-anchor="middle" font-size="10" fill="#4facfe" font-weight="bold">git push</text>
+
+    <text x="372" y="254" font-size="12" fill="#ccc">&#x2192;</text>
+
+    <rect x="385" y="235" width="110" height="28" rx="6" fill="#4facfe" opacity="0.15"/>
+    <text x="440" y="254" text-anchor="middle" font-size="10" fill="#4facfe" font-weight="bold">SSH &#x2192; VM &#x90E8;&#x7F72;</text>
+
+    <text x="507" y="254" font-size="12" fill="#ccc">&#x2192;</text>
+
+    <rect x="520" y="235" width="90" height="28" rx="6" fill="#43e97b" opacity="0.15"/>
+    <text x="565" y="254" text-anchor="middle" font-size="10" fill="#2d8a56" font-weight="bold">Health Check</text>
+
+    <text x="622" y="254" font-size="12" fill="#ccc">&#x2192;</text>
+
+    <rect x="635" y="235" width="90" height="28" rx="6" fill="#f5576c" opacity="0.15"/>
+    <text x="680" y="254" text-anchor="middle" font-size="10" fill="#f5576c" font-weight="bold">/self-heal</text>
+
+    <text x="737" y="254" font-size="12" fill="#ccc">&#x2192;</text>
+
+    <rect x="750" y="235" width="70" height="28" rx="6" fill="#43e97b"/>
+    <text x="785" y="254" text-anchor="middle" font-size="10" fill="white" font-weight="bold">&#x2714; Done</text>
+  </g>
+
+  <!-- Row 3: Knowledge -->
+  <g filter="url(#s)"><rect x="20" y="295" width="815" height="85" rx="12" fill="#fefcf3" stroke="#e8dbb5" stroke-width="1"/>
+    <text x="50" y="320" font-size="13" font-weight="bold" fill="#8a7540">PHASE 5: &#x77E5;&#x8B58;&#x6C89;&#x6FB1;</text>
+    <text x="50" y="340" font-size="11" fill="#a08c50">&#x6BCF;&#x500B; bug &#x63D0;&#x7149;&#x6210;&#x9632;&#x8B77;&#x898F;&#x5247;&#xFF0C;&#x5BEB;&#x5165; CLAUDE.md</text>
+
+    <!-- Rule tags -->
+    <rect x="45" y="352" width="95" height="20" rx="4" fill="#e8dbb5"/>
+    <text x="92" y="366" text-anchor="middle" font-size="8" fill="#6b5b2e">&#x5171;&#x4EAB;&#x72C0;&#x614B;&#x904E;&#x6FFE;</text>
+
+    <rect x="148" y="352" width="95" height="20" rx="4" fill="#e8dbb5"/>
+    <text x="195" y="366" text-anchor="middle" font-size="8" fill="#6b5b2e">&#x53C3;&#x6578;&#x660E;&#x78BA;&#x50B3;&#x905E;</text>
+
+    <rect x="251" y="352" width="95" height="20" rx="4" fill="#e8dbb5"/>
+    <text x="298" y="366" text-anchor="middle" font-size="8" fill="#6b5b2e">&#x4E09;&#x91CD;&#x5B88;&#x885B;</text>
+
+    <rect x="354" y="352" width="95" height="20" rx="4" fill="#e8dbb5"/>
+    <text x="401" y="366" text-anchor="middle" font-size="8" fill="#6b5b2e">Enum &#x5168;&#x57DF;&#x540C;&#x6B65;</text>
+
+    <rect x="457" y="352" width="95" height="20" rx="4" fill="#e8dbb5"/>
+    <text x="504" y="366" text-anchor="middle" font-size="8" fill="#6b5b2e">API &#x5373;&#x6642;&#x8B80;&#x53D6;</text>
+
+    <rect x="560" y="352" width="100" height="20" rx="4" fill="#e8dbb5"/>
+    <text x="610" y="366" text-anchor="middle" font-size="8" fill="#6b5b2e">Pub/Sub &#x6383;&#x63CF;&#x6D88;&#x8CBB;&#x8005;</text>
+
+    <rect x="668" y="352" width="85" height="20" rx="4" fill="#e8dbb5"/>
+    <text x="710" y="366" text-anchor="middle" font-size="8" fill="#6b5b2e">&#x90E8;&#x7F72;&#x5F8C;&#x6AA2;&#x67E5;</text>
+
+    <rect x="761" y="352" width="60" height="20" rx="4" fill="#e8dbb5"/>
+    <text x="791" y="366" text-anchor="middle" font-size="8" fill="#6b5b2e">&#x5B8C;&#x6574;&#x95B1;&#x8B80;</text>
+  </g>
+</svg>
