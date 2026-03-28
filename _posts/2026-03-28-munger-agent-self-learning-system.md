@@ -335,7 +335,7 @@ LLM 每次分析後，對 8 個資產啟動獨立追蹤：
 | 工具數量 | 10 個（可擴展，新增只需建檔 + 註冊） |
 | 後端 | FastAPI + SQLAlchemy + PostgreSQL |
 | 排程 | APScheduler（每小時新聞掃描 / 每日流動性 / 每週 COT） |
-| 部署 | Docker Compose → VM (192.168.50.194) |
+| 部署 | Docker Compose → VM (deploy-server) |
 | 通知 | Telegram MCP + EventBus |
 
-完整設計文件：[docs/superpowers/specs/2026-03-28-munger-agent-upgrade-design.md](https://github.com/Zekkar/ibapi-trading)
+完整設計文件：[docs/superpowers/specs/2026-03-28-munger-agent-upgrade-design.md](#)
