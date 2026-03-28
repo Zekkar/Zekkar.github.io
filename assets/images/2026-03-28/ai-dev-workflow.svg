@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" font-family="'Noto Sans TC', 'Segoe UI', sans-serif">
+  <defs>
+    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="bg4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#43e97b;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#38f9d7;stop-opacity:1"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="520" rx="12" fill="#fafbfc"/>
+
+  <!-- Title -->
+  <text x="450" y="40" text-anchor="middle" font-size="20" font-weight="bold" fill="#1a1a2e">AI 輔助開發工作流：從 Telegram 指令到生產部署</text>
+
+  <!-- Phase 0: Telegram -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="70" width="170" height="70" rx="10" fill="url(#bg1)"/>
+    <text x="115" y="100" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Telegram 指令</text>
+    <text x="115" y="120" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.85)">使用者下達需求</text>
+  </g>
+
+  <!-- Arrow -->
+  <path d="M200,105 L230,105" stroke="#667eea" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+
+  <!-- Phase 1: Impact Analysis -->
+  <g filter="url(#shadow)">
+    <rect x="235" y="70" width="170" height="70" rx="10" fill="url(#bg2)"/>
+    <text x="320" y="95" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Phase 0</text>
+    <text x="320" y="115" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.85)">影響分析</text>
+    <text x="320" y="130" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.7)">import/Pub-Sub/API 掃描</text>
+  </g>
+
+  <path d="M405,105 L435,105" stroke="#f5576c" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+
+  <!-- Phase 2: Design -->
+  <g filter="url(#shadow)">
+    <rect x="440" y="70" width="170" height="70" rx="10" fill="url(#bg3)"/>
+    <text x="525" y="95" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Brainstorming</text>
+    <text x="525" y="115" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.85)">設計 + 方案比較</text>
+    <text x="525" y="130" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.7)">Telegram 互動確認</text>
+  </g>
+
+  <path d="M610,105 L640,105" stroke="#4facfe" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+
+  <!-- Phase 3: Plan -->
+  <g filter="url(#shadow)">
+    <rect x="645" y="70" width="220" height="70" rx="10" fill="url(#bg4)"/>
+    <text x="755" y="95" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Writing Plans</text>
+    <text x="755" y="115" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.85)">詳細實作計畫 + 驗證步驟</text>
+    <text x="755" y="130" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.7)">Spec → Plan → Tasks</text>
+  </g>
+
+  <!-- Down arrow to implementation -->
+  <path d="M755,140 L755,175" stroke="#43e97b" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+
+  <!-- Implementation Row -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="180" width="835" height="120" rx="12" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="50" y="205" font-size="15" font-weight="bold" fill="#1a1a2e">Subagent-Driven Development</text>
+    <text x="50" y="225" font-size="11" fill="#666">每個 Task 分派獨立 Subagent → Spec Review → Code Quality Review → Commit</text>
+
+    <!-- Task boxes -->
+    <rect x="50" y="240" width="90" height="45" rx="6" fill="#667eea" opacity="0.9"/>
+    <text x="95" y="258" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Task 1</text>
+    <text x="95" y="273" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">DB Models</text>
+
+    <rect x="150" y="240" width="90" height="45" rx="6" fill="#667eea" opacity="0.85"/>
+    <text x="195" y="258" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Task 2</text>
+    <text x="195" y="273" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">權重持久化</text>
+
+    <rect x="250" y="240" width="90" height="45" rx="6" fill="#667eea" opacity="0.8"/>
+    <text x="295" y="258" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Task 3</text>
+    <text x="295" y="273" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">8 資產追蹤</text>
+
+    <rect x="350" y="240" width="90" height="45" rx="6" fill="#f5576c" opacity="0.85"/>
+    <text x="395" y="258" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Task 5-7</text>
+    <text x="395" y="273" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">Agent 核心</text>
+
+    <rect x="450" y="240" width="90" height="45" rx="6" fill="#f5576c" opacity="0.8"/>
+    <text x="495" y="258" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Task 6</text>
+    <text x="495" y="273" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">10 工具</text>
+
+    <rect x="550" y="240" width="90" height="45" rx="6" fill="#4facfe" opacity="0.85"/>
+    <text x="595" y="258" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Task 8</text>
+    <text x="595" y="273" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">API 整合</text>
+
+    <rect x="650" y="240" width="90" height="45" rx="6" fill="#4facfe" opacity="0.8"/>
+    <text x="695" y="258" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Task 9</text>
+    <text x="695" y="273" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">新聞聚類</text>
+
+    <rect x="750" y="240" width="90" height="45" rx="6" fill="#43e97b" opacity="0.85"/>
+    <text x="795" y="258" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Task 10</text>
+    <text x="795" y="273" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">前端+部署</text>
+  </g>
+
+  <!-- Down arrow -->
+  <path d="M450,300 L450,330" stroke="#333" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+
+  <!-- Deploy + Verify -->
+  <g filter="url(#shadow)">
+    <rect x="130" y="335" width="640" height="80" rx="12" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="450" y="360" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a2e">部署 + 自動驗證閉環</text>
+
+    <rect x="150" y="375" width="130" height="30" rx="6" fill="#ff9a9e" opacity="0.8"/>
+    <text x="215" y="395" text-anchor="middle" font-size="11" fill="white">git push</text>
+
+    <text x="295" y="395" text-anchor="middle" font-size="14" fill="#999">→</text>
+
+    <rect x="310" y="375" width="130" height="30" rx="6" fill="#fad0c4" opacity="0.9"/>
+    <text x="375" y="395" text-anchor="middle" font-size="11" fill="#333">SSH 部署 VM</text>
+
+    <text x="455" y="395" text-anchor="middle" font-size="14" fill="#999">→</text>
+
+    <rect x="470" y="375" width="130" height="30" rx="6" fill="#a8edea" opacity="0.9"/>
+    <text x="535" y="395" text-anchor="middle" font-size="11" fill="#333">Health Check</text>
+
+    <text x="615" y="395" text-anchor="middle" font-size="14" fill="#999">→</text>
+
+    <rect x="630" y="375" width="120" height="30" rx="6" fill="#43e97b" opacity="0.8"/>
+    <text x="690" y="395" text-anchor="middle" font-size="11" fill="white">/self-heal</text>
+  </g>
+
+  <!-- Results -->
+  <g filter="url(#shadow)">
+    <rect x="130" y="435" width="640" height="60" rx="12" fill="#1a1a2e"/>
+    <text x="450" y="460" text-anchor="middle" font-size="13" font-weight="bold" fill="#43e97b">Telegram 回報結果</text>
+    <text x="450" y="480" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.7)">12 commits · 33 files changed · 1705 insertions · v2.31.0 deployed</text>
+  </g>
+
+  <!-- Arrowhead marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+</svg>

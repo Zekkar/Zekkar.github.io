@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 580" font-family="'Noto Sans TC', 'Segoe UI', sans-serif">
+  <defs>
+    <filter id="shadow">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#666"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4facfe"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="580" rx="12" fill="#f8f9fa"/>
+  <text x="400" y="35" text-anchor="middle" font-size="18" font-weight="bold" fill="#1a1a2e">芒格 Agent 動態分析架構</text>
+
+  <!-- Event Input -->
+  <g filter="url(#shadow)">
+    <rect x="300" y="55" width="200" height="45" rx="8" fill="#667eea"/>
+    <text x="400" y="78" text-anchor="middle" font-size="13" font-weight="bold" fill="white">市場事件進入</text>
+    <text x="400" y="93" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.8)">新聞 / 經濟數據 / 國債拍賣</text>
+  </g>
+
+  <path d="M400,100 L400,120" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Router LLM -->
+  <g filter="url(#shadow)">
+    <rect x="250" y="125" width="300" height="60" rx="10" fill="#1a1a2e"/>
+    <text x="400" y="152" text-anchor="middle" font-size="14" font-weight="bold" fill="#f093fb">Router LLM (Claude)</text>
+    <text x="400" y="172" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.7)">「你是查理芒格，決定下一步要查什麼資料」</text>
+  </g>
+
+  <!-- Decision arrows -->
+  <path d="M400,185 L400,215" stroke="#f093fb" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="415" y="205" font-size="9" fill="#f093fb">tool_calls</text>
+
+  <!-- Tool Registry -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="220" width="680" height="160" rx="10" fill="white" stroke="#e0e0e0"/>
+    <text x="400" y="245" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">Tool Registry（10 個可用工具）</text>
+
+    <!-- Row 1 -->
+    <rect x="80" y="260" width="115" height="35" rx="5" fill="#4facfe" opacity="0.85"/>
+    <text x="137" y="282" text-anchor="middle" font-size="10" fill="white">殖利率曲線</text>
+
+    <rect x="205" y="260" width="115" height="35" rx="5" fill="#4facfe" opacity="0.8"/>
+    <text x="262" y="282" text-anchor="middle" font-size="10" fill="white">流動性快照</text>
+
+    <rect x="330" y="260" width="115" height="35" rx="5" fill="#4facfe" opacity="0.75"/>
+    <text x="387" y="282" text-anchor="middle" font-size="10" fill="white">COT 持倉</text>
+
+    <rect x="455" y="260" width="115" height="35" rx="5" fill="#4facfe" opacity="0.7"/>
+    <text x="512" y="282" text-anchor="middle" font-size="10" fill="white">知識庫搜尋</text>
+
+    <rect x="580" y="260" width="140" height="35" rx="5" fill="#4facfe" opacity="0.65"/>
+    <text x="650" y="282" text-anchor="middle" font-size="10" fill="white">因果鏈傳導</text>
+
+    <!-- Row 2 -->
+    <rect x="80" y="305" width="115" height="35" rx="5" fill="#43e97b" opacity="0.85"/>
+    <text x="137" y="327" text-anchor="middle" font-size="10" fill="white">經濟日曆</text>
+
+    <rect x="205" y="305" width="115" height="35" rx="5" fill="#43e97b" opacity="0.8"/>
+    <text x="262" y="327" text-anchor="middle" font-size="10" fill="white">Price-In 模式</text>
+
+    <rect x="330" y="305" width="115" height="35" rx="5" fill="#43e97b" opacity="0.75"/>
+    <text x="387" y="327" text-anchor="middle" font-size="10" fill="white">VIX 結構</text>
+
+    <rect x="455" y="305" width="115" height="35" rx="5" fill="#f5576c" opacity="0.8"/>
+    <text x="512" y="327" text-anchor="middle" font-size="10" fill="white">深度 LLM 分析</text>
+
+    <rect x="580" y="305" width="140" height="35" rx="5" fill="#f5576c" opacity="0.75"/>
+    <text x="650" y="327" text-anchor="middle" font-size="10" fill="white">市場注意力信號</text>
+
+    <!-- Extensibility note -->
+    <text x="400" y="365" text-anchor="middle" font-size="9" fill="#999" font-style="italic">新增工具只需建檔 + 註冊，不改 Agent 核心</text>
+  </g>
+
+  <!-- Loop arrow back to Router -->
+  <path d="M740,290 L760,290 L760,155 L550,155" stroke="#f093fb" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow)"/>
+  <text x="770" y="220" font-size="9" fill="#f093fb" transform="rotate(90, 770, 220)">結果回傳</text>
+
+  <!-- Down to final analysis -->
+  <path d="M400,380 L400,405" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="345" y="398" font-size="9" fill="#666">最大 5 輪後</text>
+
+  <!-- Final Analysis -->
+  <g filter="url(#shadow)">
+    <rect x="250" y="410" width="300" height="45" rx="8" fill="#1a1a2e"/>
+    <text x="400" y="433" text-anchor="middle" font-size="13" font-weight="bold" fill="#43e97b">Final Analysis</text>
+    <text x="400" y="448" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.7)">8 資產方向 + 幅度 + 反向思考</text>
+  </g>
+
+  <path d="M400,455 L400,475" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Post-processing -->
+  <g filter="url(#shadow)">
+    <rect x="100" y="480" width="600" height="45" rx="8" fill="white" stroke="#43e97b" stroke-width="1.5"/>
+
+    <rect x="115" y="490" width="120" height="25" rx="4" fill="#43e97b" opacity="0.2"/>
+    <text x="175" y="507" text-anchor="middle" font-size="10" fill="#333">施加分數</text>
+
+    <rect x="250" y="490" width="130" height="25" rx="4" fill="#4facfe" opacity="0.2"/>
+    <text x="315" y="507" text-anchor="middle" font-size="10" fill="#333">啟動 8 資產追蹤</text>
+
+    <rect x="395" y="490" width="120" height="25" rx="4" fill="#f093fb" opacity="0.2"/>
+    <text x="455" y="507" text-anchor="middle" font-size="10" fill="#333">知識反饋回寫</text>
+
+    <rect x="530" y="490" width="155" height="25" rx="4" fill="#fad0c4" opacity="0.5"/>
+    <text x="607" y="507" text-anchor="middle" font-size="10" fill="#333">Telegram 通知</text>
+  </g>
+
+  <!-- Fallback note -->
+  <g>
+    <rect x="30" y="135" width="200" height="40" rx="6" fill="#fff3cd" stroke="#ffc107" stroke-width="1" stroke-dasharray="4,2"/>
+    <text x="130" y="155" text-anchor="middle" font-size="9" fill="#856404">Router 失敗 → Fallback 傳統管線</text>
+    <text x="130" y="167" text-anchor="middle" font-size="8" fill="#856404">（analyze_parallel / analyze_single）</text>
+  </g>
+  <path d="M230,155 L250,155" stroke="#ffc107" stroke-width="1" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+
+  <!-- Max iterations label -->
+  <g>
+    <rect x="590" y="127" width="170" height="28" rx="5" fill="#fff" stroke="#ddd"/>
+    <text x="675" y="146" text-anchor="middle" font-size="9" fill="#666">Max 5 輪 · 120s 超時 · 3 並行</text>
+  </g>
+
+  <!-- Learning loop -->
+  <path d="M400,525 L400,555 L80,555 L80,155 L100,155" stroke="#f093fb" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/>
+  <text x="240" y="550" font-size="9" fill="#f093fb">學習閉環：追蹤結果 → 權重調整 → 知識累積 → 下次分析改進</text>
+</svg>
