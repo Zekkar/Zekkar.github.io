@@ -27,7 +27,7 @@ mermaid: true
 
 ## 流程全景
 
-<img src="/assets/images/2026-03-28/self-healing-overview.svg" alt="自癒式開發流程全景" width="100%">
+<img src="/assets/images/2026-03-28/self-healing-overview.svg" alt="自癒式開發流程全景" style="width:100%;max-width:100%;display:block;margin:0 auto;">
 
 **最低要求**：Phase 0 + 實作 + Phase 4（影響分析 + 實作 + 自癒驗證）
 
