@@ -1,187 +1,350 @@
 ---
-title: "用 AI 打造自主學習的交易分析系統：從 Telegram 指令到動態 Agent 架構"
+title: "自癒式開發流程：AI 驅動的衍生品交易系統開發實踐"
 date: 2026-03-28
 categories:
   - 技術
 tags:
   - AI
   - Claude Code
-  - Agent
+  - DevOps
+  - 開發流程
   - 交易系統
-  - 系統架構
-excerpt: "記錄一天內如何透過 Claude Code + Telegram 完成交易系統的 bug 修復、架構升級、和動態 Agent 實作的完整開發流程。"
+excerpt: "一套以 Claude Code + Telegram 為核心的自癒開發流程，從需求分析到部署驗證形成完整閉環。每個 bug 都會被提煉成防護規則，每次部署都會自動診斷修復。"
 toc: true
 toc_sticky: true
+mermaid: true
 ---
 
 ## 前言
 
-這篇文章記錄了我在 2026 年 3 月 28 日，透過 Claude Code CLI 搭配 Telegram 完成的一整天開發工作。
+我維護兩套衍生品交易系統 — **Shioaji**（台灣期貨選擇權，15 個微服務）和 **IBAPI**（美國期貨選擇權，FastAPI 單體）。過去半年的開發中，我逐步建立了一套**自癒式開發流程**，核心原則是：
 
-核心主題是：**如何讓交易分析系統從「固定管線」演化為「動態 Agent 架構」**，像查理芒格那樣根據事件性質自主選擇分析工具和推理路徑。
+> **需求即測試、自動診斷、自癒修復、知識沉澱。**
 
-一天之內完成了三個系統的修復和升級，產出 30+ commits、修改/新增 50+ 檔案、涵蓋兩個獨立的交易系統（Shioaji 台灣期貨 + IBAPI 美國期貨）。
-
----
-
-## 整體工作流程
-
-![AI 輔助開發工作流](/assets/images/2026-03-28/ai-dev-workflow.svg)
-
-整個流程的特點是：**我在 Telegram 上下達指令和確認設計，Claude Code 負責程式碼的搜尋、分析、撰寫、部署和驗證。** 每個階段都有明確的交接點：
-
-1. **Telegram 指令** — 用自然語言描述需求（「幫我檢查雞翅策略有沒有問題」）
-2. **影響分析** — 自動掃描 import 依賴、Pub/Sub 頻道、API 呼叫鏈
-3. **Brainstorming** — 提出 2-3 個方案比較，在 Telegram 上逐一確認
-4. **Writing Plans** — 產出詳細實作計畫，包含完整程式碼和驗證命令
-5. **Subagent-Driven Development** — 每個 Task 分派獨立 Agent 實作
-6. **部署 + /self-heal** — SSH 到 VM 部署，自動健康檢查
+這套流程的「自癒」不只是指系統的自動恢復，更是指**開發流程本身會從錯誤中學習並防止重蹈覆轍**。
 
 ---
 
-## 第一幕：Bug 修復
+## 流程全景
 
-### Shioaji 雞翅鴨翅策略
+```mermaid
+flowchart TD
+    A[📱 Telegram 指令] --> B[Phase 0: 影響分析]
+    B --> C[Phase 1: 測試情境生成]
+    C --> D[Phase 2: 實作 + 驗證]
+    D --> E[Phase 2.5: 合約驗證]
+    E --> F[Phase 3: E2E 驗證]
+    F --> G[Phase 4: 自癒驗證]
+    G --> H{通過?}
+    H -->|否| I[自動修復]
+    I --> G
+    H -->|是| J[Phase 5: 知識沉澱]
+    J --> K[📱 Telegram 回報]
 
-起因是 Telegram 的一條訊息：「剛修了雞翅策略，但不確定是否正確，幫我檢查。」
-
-Claude Code 用 `code-reviewer` 子 Agent 深入分析了兩個 commits 的修復，發現 **6 個問題**：
-
-| 嚴重程度 | 問題 |
-|---------|------|
-| Critical | 有持倉結算路徑 `current_cycle_id` 清除可能被靜默跳過 |
-| Critical | `strategy_engine.py` 硬寫 Redis key（6 處），繞過封裝 |
-| Important | 結算時序 race condition（asyncio 協程切換點） |
-| Important | 啟動掃描遺漏孤立 ACTIVE 週期 |
-| Important | `reset_account_equity` 未清除持倉資料 |
-| Refactor | 清理舊週期引用三個分支重複程式碼 |
-
-修復策略是在 `SimManager` 新增 `save_account()` 統一入口，消除所有硬寫的 Redis key。部署後日誌確認孤立週期掃描成功清理了多個殘留的 ACTIVE 週期。
-
-### IBAPI 芒格綜合分析
-
-同樣透過 `code-reviewer` 子 Agent 審查，發現 **7 個問題**：
-
-最嚴重的是 `news_service.py` 的 **DB Session 跨越長時間 LLM await**。LLM 分析需要 10-60 秒，但 DB Session 在整個 `hourly_scan` 的 `with` block 中持有，LLM 完成後的 `db.flush()` 可能操作已過期的 Session。
-
-修復方式：`_auto_analyze` 在 LLM 呼叫前先提取所需資料（news_id、title 等純值），LLM 完成後開啟新的獨立 Session 寫入結果。
-
----
-
-## 第二幕：芒格 Agent 動態分析架構
-
-這是這一天最大的工程。起因是我對芒格系統的反省：
-
-> 我原本的預期是它可以像查理芒格那樣透過外在環境足夠多的因素去自我學習。
-
-### 系統現狀分析
-
-Claude Code 用 `code-explorer` 子 Agent 深入分析了整個 Munger 系統（13 個服務模組、10+ 個 DB 表），產出了完整的能力清單和缺口分析。
-
-**三個結構性缺陷**：
-
-1. **調權學習不持久** — `WeightTuner` 用 `importlib` 修改記憶體中的 dict，重啟後學習成果全部歸零
-2. **學習信號太窄** — 反應追蹤只追蹤 ZB 一個資產，但系統分析 8 個資產
-3. **知識反饋閉環斷裂** — LLM 回傳的知識驗證反饋從未被回寫到知識庫
-
-**vs LangGraph 的差距**：
-- 沒有動態工具選擇（每次走固定管線）
-- 沒有多輪自主推理（一攻一守固定 3 步）
-- 沒有跨分析狀態記憶
-- Prompt 結構不會演化
-
-### 設計決策
-
-在 Telegram 上進行了 4 輪問答，確定了方案：
-
-- **混合架構** — 現有 API/排程/前端不動，核心分析引擎替換為 Agent 模組
-- **自建 StateGraph** — 不引入 LangGraph 框架，自建約 300 行核心程式碼
-- **可配置主控 LLM** — 預設 Claude，可線上切換
-- **保留遷移路徑** — 未來需要時可低成本遷移到 LangGraph
-
-### Agent 架構
-
-![芒格 Agent 架構](/assets/images/2026-03-28/munger-agent-architecture.svg)
-
-核心概念：
-
-```
-MungerAgent = Router LLM + Tool Registry + AgentState + Loop Control
+    style A fill:#667eea,stroke:#333,color:#fff
+    style G fill:#f5576c,stroke:#333,color:#fff
+    style I fill:#ffa94d,stroke:#333,color:#fff
+    style J fill:#43e97b,stroke:#333,color:#fff
+    style K fill:#667eea,stroke:#333,color:#fff
 ```
 
-**Router LLM** 扮演查理芒格的角色，看當前收集的資料決定「下一步要查什麼」或「已經夠了，產出結論」。每輪最多呼叫 2 個工具，最多 5 輪，120 秒超時。
+**最低要求**：Phase 0 + 實作 + Phase 4（影響分析 + 實作 + 自癒驗證）
 
-**10 個工具**各自封裝現有服務：殖利率曲線、流動性快照、COT 持倉、知識庫搜尋、因果鏈傳導、經濟日曆、Price-In 模式、VIX 期限結構、深度 LLM 分析、市場注意力信號。
-
-新增工具只需建檔 + 繼承 `AgentTool` + 註冊，不改 Agent 核心。
-
-### 新聞注意力信號
-
-一個重要的新機制：當同一主題在一天內被多次報導時，系統不再每篇都觸發 LLM 分析，而是聚類計數。
-
-- 1 篇：正常分析
-- 2 篇同來源：只計數不分析（同事件不同角度）
-- 3+ 篇多來源：標記為「高注意力」，觸發一次 Agent 分析
-- 10+ 篇：標記為「飽和」（可能已 price-in）
-
-Agent 分析時可呼叫 `check_market_attention` 工具，比對同時段的市場價格波動，判斷「市場是否真的在意這個事件」。
+**完整要求**：全部 Phase（跨服務或前端變更時）
 
 ---
 
-## 第三幕：實作 — Subagent-Driven Development
+## Phase 0：影響分析（修改前必做）
 
-10 個 Task 的實作採用 **Subagent-Driven Development** 模式：每個 Task 分派一個獨立的 Subagent 實作，完成後進行 Spec 合規審查和程式碼品質審查。
+每次接到需求後，**寫程式碼之前**先掃描影響範圍。
 
-實作過程中發現一個有趣的 **啟動順序陷阱**：
+```mermaid
+flowchart LR
+    A[識別變更檔案] --> B[Import 依賴掃描]
+    B --> C[Pub/Sub 頻道掃描]
+    C --> D[API 呼叫鏈掃描]
+    D --> E[前端影響掃描]
+    E --> F[產出影響報告]
 
-權重載入一開始放在 `_activate_services()`（只有 IB 連線成功才呼叫），週末 IB 不運行就不會執行。等於學習成果的載入依賴於一個不相關的條件（IB 是否在線）。修到 `startup()` 後（DB 就緒即可），週末也能正確初始化。
+    style A fill:#4facfe,stroke:#333,color:#fff
+    style F fill:#43e97b,stroke:#333,color:#fff
+```
 
-**啟動順序 bug 是最難發現的 bug 之一，因為它只在特定條件下出現。**
+實際執行的掃描命令：
+
+```bash
+# 對每個被修改的模組，掃描誰依賴它
+grep -rn "from X import\|import X" --include="*.py"
+
+# 掃描 Pub/Sub 頻道的所有 publisher 和 consumer
+grep -rn "publish\|subscribe\|CHANNEL" --include="*.py"
+
+# 找出 API route 定義和內部 HTTP 呼叫
+grep -rn "@router\." --include="*.py"
+```
+
+### 為什麼需要影響分析？
+
+**慘痛案例**：v1.58.2 將 Redis Stream 遷移到 Pub/Sub 時，改了 `data` 格式但**漏改 MUD 和 KBar 的消費者**，導致全部 tick 被丟棄。如果當時做了影響分析，就會發現 `quote:tick` 頻道有 5 個消費者需要同步更新。
 
 ---
 
-## 數據統計
+## Phase 2：實作 + Brainstorming 設計
+
+### 小型修復：直接修
+
+對於 bug 修復或小幅調整，跳過設計直接實作。但遵守一個原則：**發現問題直接修，不只是回報問題。**
+
+### 大型功能：Brainstorming → Plan → Subagent
+
+對於架構級變更，走完整設計流程：
+
+```mermaid
+flowchart TD
+    A[Brainstorming] --> B{需要視覺化?}
+    B -->|是| C[Mermaid / SVG 設計圖]
+    B -->|否| D[文字方案比較]
+    C --> E[Telegram 逐段確認]
+    D --> E
+    E --> F[Writing Plans]
+    F --> G[Subagent-Driven Dev]
+
+    subgraph "每個 Task"
+        G --> H[Implementer Agent]
+        H --> I[Spec Review]
+        I --> J[Code Quality Review]
+        J --> K[Commit]
+    end
+
+    style A fill:#f093fb,stroke:#333,color:#fff
+    style F fill:#4facfe,stroke:#333,color:#fff
+    style G fill:#43e97b,stroke:#333,color:#fff
+```
+
+**Brainstorming** 的核心是提出 2-3 個方案比較，在 Telegram 上逐一確認。重要的是讓使用者做**設計決策**，而不是全部交給 AI。
+
+**Subagent-Driven Development** 的每個 Task 由獨立 Agent 實作，彼此的 context 互不干擾。完成後經過兩階段 review：先確認是否符合 spec，再檢查程式碼品質。
+
+---
+
+## 任務完成流程（每次修改必走）
+
+不管改動大小，完成後都要走完這個閉環：
+
+```mermaid
+flowchart LR
+    A[版號 +1] --> B[CHANGELOG]
+    B --> C[git commit]
+    C --> D[git push]
+    D --> E[SSH 部署 VM]
+    E --> F[等 30 秒]
+    F --> G[/health-check]
+    G --> H{healthy?}
+    H -->|是| I[/self-heal]
+    H -->|否| J[讀日誌修復]
+    J --> A
+
+    style A fill:#ffa94d,stroke:#333
+    style E fill:#4facfe,stroke:#333,color:#fff
+    style I fill:#f5576c,stroke:#333,color:#fff
+```
+
+```bash
+# 1. 版號 + CHANGELOG
+# VERSION, frontend/package.json, CHANGELOG.md 同步更新
+
+# 2. Commit + Push
+git add <files> && git commit -m "fix/feat: 描述"
+git push origin main
+
+# 3. 部署到 VM
+ssh user@192.168.50.194 "cd /home/user/ShioajiPy && git pull && \
+  docker compose build <service> && docker compose up -d <service>"
+
+# 4. 等待 + 健康檢查
+sleep 30
+ssh user@192.168.50.194 "docker ps --format '{{.Names}} {{.Status}}' | grep shioaji"
+```
+
+---
+
+## Phase 4：/self-heal 自癒驗證
+
+這是整個流程最核心的部分。每次部署後自動執行：
+
+```mermaid
+flowchart TD
+    A[Step 1: 全服務健康檢查] --> B{全部 healthy?}
+    B -->|否| C[讀取不健康服務日誌]
+    B -->|是| D[Step 2: Seq/Docker 錯誤查詢]
+    C --> D
+    D --> E{有 Error?}
+    E -->|否| F[Step 7: 數據流驗證]
+    E -->|是| G[Step 3: Tempo 追蹤]
+    G --> H[Step 4: 修復路徑判斷]
+    H --> I{Code bug?}
+    I -->|是| J[Step 5: 自動修復 + 部署]
+    I -->|否| K[環境問題，報告停止]
+    J --> L[Step 6: 重新驗證]
+    L --> M{修好了?}
+    M -->|否| N{迭代 > 3?}
+    N -->|是| O[Telegram 告警]
+    N -->|否| H
+    M -->|是| F
+    F --> P[Step 8: 產出報告]
+
+    style A fill:#4facfe,stroke:#333,color:#fff
+    style J fill:#ffa94d,stroke:#333
+    style O fill:#f5576c,stroke:#333,color:#fff
+    style P fill:#43e97b,stroke:#333,color:#fff
+```
+
+### 自癒的三個層次
+
+1. **容器層**：檢查 Docker 容器狀態（Running / Healthy / Restarting）
+2. **日誌層**：從 Seq 結構化日誌和 Docker logs 中抓取 Error + TraceId
+3. **修復層**：根據錯誤類型分類（Code bug / Format mismatch / Connection issue），自動定位檔案並修復
+
+### 修復分類規則
+
+| 錯誤模式 | 分類 | 修復方式 |
+|---------|------|---------|
+| `TypeError`, `AttributeError` | Code bug | 修正 Python 邏輯 |
+| `JSONDecodeError`, `unexpected type` | Format mismatch | 修正 serializer + 加 isinstance 兼容 |
+| `ConnectionRefusedError` | Connection issue | 檢查服務依賴 |
+| External API 4xx/5xx | Environment | 報告並停止（非我方問題） |
+
+### 最大重試 3 次
+
+自癒循環最多執行 3 次。超過時發送 Telegram 告警：
+
+```
+自癒失敗告警
+已嘗試 3 次修復但仍有錯誤
+
+錯誤摘要：{error_summary}
+最後嘗試的修復：{last_fix_description}
+
+請人工介入處理
+```
+
+---
+
+## Phase 5：知識沉澱
+
+每個 bug 修復後，提煉成 **防護規則**寫入 CLAUDE.md。目前已累積 8 條規則：
+
+```mermaid
+mindmap
+  root((歷史 Bug<br/>防護規則))
+    共享狀態寫入
+      必須過濾來源
+      保留既有欄位
+    多腿交易參數
+      禁止依賴預設值
+      grep 所有呼叫端
+    定時任務三重守衛
+      交易時段檢查
+      數據新鮮度
+      報價完整性
+    Enum 全域同步
+      全域搜尋 switch/match
+      default/fallback 處理
+    API 即時讀取
+      優先 Redis
+      考慮資料可用時機
+    Pub/Sub 格式變更
+      掃描全部消費者
+      CHANGELOG 標記
+    部署後健康檢查
+      等 30 秒
+      全部 healthy + 0 ERROR
+    函式呼叫前完整閱讀
+      列出所有職責
+      拆分後選擇性呼叫
+```
+
+這些規則不是文件上的擺設 — 它們寫在 CLAUDE.md 中，AI 每次開發時都會讀取並遵守。**系統從過去的錯誤中學習，防止未來重蹈覆轍。**
+
+---
+
+## 跨系統的統一標準
+
+兩套交易系統雖然技術棧不同（Shioaji: 微服務 + Redis / IBAPI: 單體 + PostgreSQL），但共享相同的開發流程：
+
+| 項目 | Shioaji | IBAPI |
+|------|---------|-------|
+| 部署 | `docker compose build + up` | `docker compose up -d --build` |
+| 健康檢查 | `/health-check` Skill | `/api/diagnostics` API |
+| 自癒驗證 | `/self-heal`（Seq + Docker logs） | Seq + Diagnostics API |
+| 版號管理 | `VERSION` + `frontend/package.json` | `config.py` + `frontend/package.json` |
+| 通知 | Telegram MCP | Telegram EventBus |
+
+統一的流程意味著不管在哪個專案工作，行為模式和品質標準都一致。
+
+---
+
+## Telegram 作為開發介面
+
+整個流程的觸發和回饋都透過 Telegram：
+
+```mermaid
+sequenceDiagram
+    participant U as 使用者 (Telegram)
+    participant C as Claude Code
+    participant V as VM (192.168.50.194)
+
+    U->>C: 「幫我檢查雞翅策略有沒有問題」
+    C->>C: code-reviewer 子 Agent 分析
+    C->>U: 發現 6 個問題，需要修嗎？
+    U->>C: 修理
+    C->>C: 影響分析 → 實作 → 語法檢查
+    C->>V: git push + SSH 部署
+    V->>C: 容器狀態 + 日誌
+    C->>C: /self-heal 驗證
+    C->>U: ✅ 自癒驗證通過，0 錯誤
+```
+
+這種模式的好處是：**我可以在任何地方、任何裝置上下達開發指令**，不需要打開 IDE。設計決策在 Telegram 上討論確認，程式碼的撰寫、測試、部署全由 Claude Code 處理。
+
+---
+
+## 實際成效
+
+以 2026-03-28 這一天為例：
 
 | 指標 | 數值 |
 |------|------|
-| 專案數 | 2（Shioaji + IBAPI） |
+| 跨越的專案 | 2（Shioaji + IBAPI） |
 | Commits | 30+ |
-| 新增檔案 | 14 |
-| 修改檔案 | 19 |
-| 新增程式碼行數 | ~1,700 |
-| 新增 DB 表 | 4 |
-| 新增 API 端點 | 4 |
-| Agent 工具 | 10 |
+| 發現的 bug | 15 |
+| 修復的 bug | 15 |
 | 部署次數 | 8 |
-| 發現並修復的 bug | 15 |
+| 自癒迭代 | 2 次（啟動順序 bug 需要第二次修復） |
+| 新增防護規則 | 3 條 |
 
 ---
 
-## 心得與反思
+## 經驗總結
 
-### AI 輔助開發的價值
+### 1. 自癒的本質是閉環
 
-最大的價值不是「AI 幫你寫程式碼」，而是 **AI 幫你看見你看不到的東西**：
+「寫完部署就結束」是最常見的開發反模式。自癒流程強制要求每次部署後都驗證，驗證失敗就自動修復，修復後再驗證。**沒有通過驗證就不結束任務。**
 
-- `code-reviewer` 發現的 race condition 和封裝洩漏，是人眼很容易遺漏的
-- 影響分析自動掃描 import 依賴鏈，避免改 A 壞 B
-- 自動化的部署驗證閉環，確保每次修改都通過健康檢查
+### 2. 知識沉澱比修 bug 更重要
 
-### 從固定管線到動態 Agent
+修一個 bug 是一次性的，但把它提煉成防護規則是永久的。CLAUDE.md 中的 8 條規則，每一條都源自真實的線上事故。
 
-查理芒格的核心不是「知道很多」，而是「知道什麼時候該用什麼」。固定管線就像一個只會用錘子的人，動態 Agent 才能根據問題選擇工具。
+### 3. 影響分析是最被低估的步驟
 
-但 Agent 的價值需要時間驗證。我們設計了 A/B 比對機制：前 30 天同時運行 Agent 和傳統管線，比對準確率。如果 Agent 不如傳統，自動 fallback。
+「我只改了一行」是事故的起點。Pub/Sub 格式變更、Enum 新增值、Redis key 重命名 — 這些「小改動」如果沒有掃描所有消費者，就會在你意想不到的地方引爆。
 
-### 學習持久化是一切的基礎
+### 4. AI 的價值在於看見盲點
 
-再聰明的系統，如果每次重啟都失去記憶，就永遠無法累積經驗。修好調權持久化、知識反饋閉環這些「無聊」的基礎設施，才是讓系統能真正「自我學習」的前提。
+code-reviewer 發現的 race condition 和封裝洩漏，是人眼 code review 容易遺漏的。讓 AI 做系統性掃描，人做設計決策 — 這是目前最有效的分工模式。
 
 ---
 
-## 未來方向
+## 下一篇預告
 
-- **跨分析記憶** — 讓 Agent 看到「上次同類事件我的判斷和結果」
-- **Router Prompt 演化** — 週回顧自動分析工具使用模式，生成直覺補充
-- **外在因素擴展** — Put/Call ratio、非美央行、信貸市場、投資者情緒
-- **LangGraph 遷移** — 若需要 streaming 或 human-in-the-loop，預估 2-3 天遷移
+下一篇文章會介紹**芒格 Agent 動態分析架構** — 如何讓交易分析系統像查理芒格那樣，根據事件性質自主選擇分析工具和推理路徑，並透過持久化的學習機制不斷改進。
