@@ -1,5 +1,5 @@
 ---
-title: "Harness Engineering 實戰：打造自我改善的 AI 開發系統"
+title: "Harness Engineering 方法論：從 CLAUDE.md 到自進化的 AI 開發體系"
 date: 2026-04-12
 categories:
   - 技術
@@ -7,423 +7,383 @@ tags:
   - AI
   - Claude Code
   - Harness Engineering
-  - DevOps
+  - 方法論
   - 工作流自動化
-excerpt: "我如何為 Claude Code 建構 5 層 Harness 架構來運營生產級金融系統 — 附 700+ sessions 的真實摩擦數據，證明哪些方法有效。Agent = Model + Harness。"
+excerpt: "Agent = Model + Harness。模型再強，沒有 harness 就只是一台沒有方向盤的引擎。本文整理我在生產環境中實踐 Harness Engineering 的完整方法論——五層架構、三個核心洞見、以及仍在演進中的下一步。"
 toc: true
 toc_sticky: true
 ---
 
-## 前言
+## 從一個挫折說起
 
-AI 開發社群近期凝聚出一個關鍵洞見：**Agent = Model + Harness**。Harness 是模型以外的一切 — 編排層、工具、權限控制、記憶系統、上下文管理與工作流自動化。
+我開始使用 AI Coding Agent 後遇到的第一個嚴重問題，不是模型寫出 bug，而是**模型連續兩次提出我已經否決過的方案**。
 
-即使是最頂尖的模型在多輪對話中運作，缺少精心設計的 harness 也會表現不佳。模型傾向一次做太多事，或是過早宣告完成；harness 的職責就是對這些傾向施加結構性約束。
+第一次我耐心解釋為什麼 polling 不行、要用 event-driven。第二次我意識到：這不是模型的問題，而是**我沒有建立系統來約束它**。
 
-本文記錄了我在 **21 天內經歷 700+ 場 Claude Code sessions**，運營一套包含 36+ Docker 容器的金融交易系統的實戰歷程。我將分享架構設計、摩擦數據，以及讓 harness 持續自我改善的閉環機制。
-
-> 下一個前沿不是更好的模型 — 而是更好的 harness。
+這是我接觸 Harness Engineering 的起點。
 
 ---
 
-## 五層 Harness 架構
+## 什麼是 Harness Engineering
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" style="width:100%;height:auto;max-width:100%;" font-family="'Noto Sans TC','Segoe UI',sans-serif">
+社群的共識越來越明確：
+
+> **Agent = Model + Harness**
+
+Harness 是模型以外的一切——行為規範、自動化護欄、工作流模板、知識系統、以及讓這一切持續進化的回饋迴圈。
+
+模型是引擎；harness 是底盤、方向盤、煞車和導航。引擎再強大，沒有底盤的車只會在原地空轉。
+
+---
+
+## 五層架構
+
+在實踐中，我的 harness 自然演化出五個層次。每一層解決一個特定的失敗模式，而且**越往上層的 ROI 越高**：
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" style="width:100%;height:auto;max-width:100%;" font-family="'Noto Sans TC','Segoe UI',sans-serif">
   <defs>
-    <filter id="s2"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.1"/></filter>
+    <filter id="s"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.1"/></filter>
     <linearGradient id="z1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#667eea"/><stop offset="100%" stop-color="#764ba2"/></linearGradient>
     <linearGradient id="z2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f093fb"/><stop offset="100%" stop-color="#f5576c"/></linearGradient>
     <linearGradient id="z3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#4facfe"/><stop offset="100%" stop-color="#00f2fe"/></linearGradient>
     <linearGradient id="z4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#43e97b"/><stop offset="100%" stop-color="#38f9d7"/></linearGradient>
     <linearGradient id="z5" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#fa709a"/><stop offset="100%" stop-color="#fee140"/></linearGradient>
   </defs>
-  <rect width="800" height="420" rx="12" fill="#1e1e2e"/>
+  <rect width="800" height="440" rx="12" fill="#1e1e2e"/>
   <text x="400" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#e0e0e0">五層 Harness 架構</text>
-  <text x="400" y="50" text-anchor="middle" font-size="12" fill="#999">Agent = Model + Harness</text>
+  <text x="400" y="52" text-anchor="middle" font-size="12" fill="#999">越往上層，ROI 越高</text>
 
-  <g filter="url(#s2)"><rect x="40" y="70" width="720" height="56" rx="10" fill="url(#z5)"/><text x="70" y="96" font-size="13" font-weight="bold" fill="white">第五層</text><text x="140" y="96" font-size="14" font-weight="bold" fill="white">自我改善迴圈</text><text x="460" y="96" font-size="12" fill="rgba(255,255,255,0.8)">Insights -> Wiki 基線 -> PDCA -> Harness 更新</text></g>
+  <g filter="url(#s)"><rect x="40" y="72" width="720" height="58" rx="10" fill="url(#z5)"/><text x="70" y="100" font-size="13" font-weight="bold" fill="white">第五層</text><text x="140" y="100" font-size="14" font-weight="bold" fill="white">自我改善迴圈</text><text x="680" y="100" font-size="11" fill="rgba(255,255,255,0.7)" text-anchor="end">用數據改善 harness 本身</text></g>
 
-  <g filter="url(#s2)"><rect x="40" y="136" width="720" height="56" rx="10" fill="url(#z4)"/><text x="70" y="162" font-size="13" font-weight="bold" fill="#1a1a2e">第四層</text><text x="140" y="162" font-size="14" font-weight="bold" fill="#1a1a2e">知識持久化</text><text x="460" y="162" font-size="12" fill="rgba(0,0,0,0.5)">跨 Session 記憶 | Wiki (MCP) | Dev Diary</text></g>
+  <g filter="url(#s)"><rect x="40" y="140" width="720" height="58" rx="10" fill="url(#z4)"/><text x="70" y="168" font-size="13" font-weight="bold" fill="#1a1a2e">第四層</text><text x="140" y="168" font-size="14" font-weight="bold" fill="#1a1a2e">知識持久化</text><text x="680" y="168" font-size="11" fill="rgba(0,0,0,0.4)" text-anchor="end">打破每個 session 從零開始的問題</text></g>
 
-  <g filter="url(#s2)"><rect x="40" y="202" width="720" height="56" rx="10" fill="url(#z3)"/><text x="70" y="228" font-size="13" font-weight="bold" fill="white">第三層</text><text x="140" y="228" font-size="14" font-weight="bold" fill="white">工作流模板 (Skills)</text><text x="460" y="228" font-size="12" fill="rgba(255,255,255,0.8)">/sbe | /deploy | /devdiary | /health-check</text></g>
+  <g filter="url(#s)"><rect x="40" y="208" width="720" height="58" rx="10" fill="url(#z3)"/><text x="70" y="236" font-size="13" font-weight="bold" fill="white">第三層</text><text x="140" y="236" font-size="14" font-weight="bold" fill="white">工作流模板</text><text x="680" y="236" font-size="11" fill="rgba(255,255,255,0.7)" text-anchor="end">多步驟流程不再跳步</text></g>
 
-  <g filter="url(#s2)"><rect x="40" y="268" width="720" height="56" rx="10" fill="url(#z2)"/><text x="70" y="294" font-size="13" font-weight="bold" fill="white">第二層</text><text x="140" y="294" font-size="14" font-weight="bold" fill="white">自動化護欄 (Hooks)</text><text x="460" y="294" font-size="12" fill="rgba(255,255,255,0.8)">語法驗證器 | Commit 守衛 | 成本追蹤器</text></g>
+  <g filter="url(#s)"><rect x="40" y="276" width="720" height="58" rx="10" fill="url(#z2)"/><text x="70" y="304" font-size="13" font-weight="bold" fill="white">第二層</text><text x="140" y="304" font-size="14" font-weight="bold" fill="white">自動化護欄</text><text x="680" y="304" font-size="11" fill="rgba(255,255,255,0.7)" text-anchor="end">不依賴模型記憶力的強制執行</text></g>
 
-  <g filter="url(#s2)"><rect x="40" y="334" width="720" height="56" rx="10" fill="url(#z1)"/><text x="70" y="360" font-size="13" font-weight="bold" fill="white">第一層</text><text x="140" y="360" font-size="14" font-weight="bold" fill="white">行為規範 (CLAUDE.md)</text><text x="460" y="360" font-size="12" fill="rgba(255,255,255,0.8)">架構原則 | Bug 防護規則 | 權限控制</text></g>
+  <g filter="url(#s)"><rect x="40" y="344" width="720" height="58" rx="10" fill="url(#z1)"/><text x="70" y="372" font-size="13" font-weight="bold" fill="white">第一層</text><text x="140" y="372" font-size="14" font-weight="bold" fill="white">行為規範</text><text x="680" y="372" font-size="11" fill="rgba(255,255,255,0.7)" text-anchor="end">AI agent 的憲法</text></g>
+
+  <text x="400" y="425" text-anchor="middle" font-size="11" fill="#666">每一層解決一個特定失敗模式。單獨任何一層都不夠。</text>
 </svg>
-
-每一層解決不同的失敗模式。以下從底層開始逐層說明。
 
 ---
 
-## 第一層：行為規範 (CLAUDE.md)
+## 第一層：行為規範——AI 的憲法
 
-**解決的問題**：模型提出違反架構決策的方案，或重複過去的錯誤。
+CLAUDE.md 是整個 harness 的基石。它定義了 AI 在這個專案中**什麼能做、什麼不能做、怎麼做**。
 
-CLAUDE.md 是 AI agent 的「憲法」。我的 CLAUDE.md 從簡單的風格指南演化成 **200+ 行的操作手冊**：
+但我學到的第一課是：CLAUDE.md 不是寫一次就好的靜態文件。它是**活的法典**，每一條規則背後都有一個故事。
 
-### 架構原則（不可協商）
+### 規則的三種來源
+
+**架構原則**——來自技術判斷：
 
 ```markdown
-## 架構設計原則
-- 事件驅動優先，禁止 Polling：所有狀態變更必須透過事件/回調/TTL 過期驅動
-- 偏好 Pub/Sub、Callback、Cache TTL expiry 等機制
-- 設計新功能時，若發現需要 polling，必須先提出事件驅動替代方案
+事件驅動優先，禁止 Polling：
+所有狀態變更必須透過事件/回調/TTL 過期驅動。
 ```
 
-這條規則的由來：模型**連續兩次**提出 polling 方案，在我強力糾正後，實現了 **98.8% 的 CPU 降幅**。不寫入 CLAUDE.md，每個新 session 都可能重蹈覆轍。
-
-### Bug 防護規則（從生產事故提煉）
-
-一次部署同時引入 3 個 production bug 後，我濃縮出 **8 條防禦規則**：
+**Bug 防護規則**——來自生產事故：
 
 ```markdown
-### 1. 共享狀態寫入必須過濾來源
-- 更新 store 前，必須檢查 symbol === currentSymbol
-
-### 2. 多腿交易參數必須明確傳遞
-- lots, contract_multiplier 禁止依賴預設值
-
-### 3. 定時任務必須三重守衛
-必須在執行前驗證：
-1. 交易時段：is_trading_time()
-2. 數據新鮮度：is_tick_stale(symbol, 120)
-3. 報價完整性：兩腿同時有成交價 + BidAsk
+共享狀態寫入必須過濾來源：
+更新 store 前，必須檢查 symbol === currentSymbol。
 ```
 
-### 為什麼光靠 CLAUDE.md 不夠
+這條規則來自一次因為 tick handler 沒有過濾 symbol 導致不同標的的報價互相覆蓋的事故。
 
-令人不安的事實：**CLAUDE.md 已覆蓋 ~90% 的摩擦場景，但「錯誤方法」仍然發生了 31 次。**
+**完整性規範**——來自被反覆咬到的疏忽：
 
-規則存在 ≠ 規則被遵守。這就是需要其餘 4 層的原因。
+```markdown
+修 bug 時，必須先 grep 整個 codebase 找出所有相同 pattern 的位置。
+禁止只修第一個找到的 occurrence 就宣告完成。
+```
+
+### 多層級管理
+
+一份 CLAUDE.md 管不了所有事。我的實踐是分層：
+
+| 層級 | 範圍 | 內容 |
+|------|------|------|
+| 全域 | 所有專案通用 | 語言、部署環境、資料保護、Bash 行為準則 |
+| 專案 | 單一 repo | 架構原則、Bug 防護規則、服務職責劃分 |
+| 知識庫 | Wiki vault | 三層架構規範、ingest 流程、frontmatter schema |
+
+專案層級可以覆蓋全域設定，知識庫有自己獨立的 schema。每一層都是**該層級的最高權威**。
+
+### 第一層的局限
+
+這是我最深刻的體悟：
+
+> **規則存在 ≠ 規則被遵守。**
+
+CLAUDE.md 已經覆蓋了約 90% 的已知問題場景。但 AI 仍然會犯那些被明文禁止的錯誤。不是因為它「不聽話」，而是因為文字規則是**被動的**——模型必須主動記得去查閱。在複雜的多步驟任務中，這種記憶力是不可靠的。
+
+這就是為什麼只有第一層遠遠不夠。
 
 ---
 
-## 第二層：自動化護欄 (Hooks)
+## 第二層：自動化護欄——不依賴記憶力的強制執行
 
-**解決的問題**：語法錯誤和安全問題即使有規則也會漏過。
+Hook 是在 AI 工具呼叫的生命週期中自動觸發的 shell 指令。它的價值在於：**不管模型記不記得規則，hook 都會執行**。
 
-Hooks 是在生命週期事件中執行的 shell 指令。它們提供**不依賴模型記憶力**的自動化強制執行。
+### 我的四個 hook
 
-### Hook 架構
+| Hook | 觸發時機 | 防護的問題 |
+|------|---------|-----------|
+| 語法驗證器 | 每次編輯檔案後 | `.py` 語法錯誤、`.json` 格式錯誤 |
+| Commit 守衛 | git commit 前 | 硬編碼密鑰、遺留的 debug 語句 |
+| Wiki 自動提交 | 編輯知識庫後 | 知識變更漏提交 |
+| 成本追蹤器 | Session 結束 | 資源消耗不透明 |
 
-| Hook | 觸發時機 | 功能 |
-|------|---------|------|
-| `syntax-validator` | PostToolUse (Edit/Write) | 每次編輯後驗證 `.py` 和 `.json` 語法 |
-| `commit-guard` | PreToolUse (git commit) | 掃描暫存區中的密鑰和 debug 語句 |
-| `wiki-auto-commit` | PostToolUse (Edit/Write) | 知識庫變更自動 git commit+push |
-| `cost-tracker` | Stop | 記錄 session 成本指標 |
+### 設計原則：在犯罪現場攔截
 
-### 語法驗證器
+Hook 的核心設計哲學是**在最接近錯誤發生的時間點攔截**：
 
-```python
-# PostToolUse hook：每次檔案編輯後自動驗證語法
-def validate_python(filepath):
-    result = subprocess.run(
-        [sys.executable, "-m", "py_compile", filepath],
-        capture_output=True, text=True
-    )
-    return result.returncode == 0, result.stderr.strip()
+- 語法錯誤 → 在**編輯後**立刻驗證，不是等到部署時
+- 密鑰洩漏 → 在 **commit 前**掃描，不是等到 code review
+- 知識變更 → **寫入後**自動提交，不需要記得手動 git push
 
-def validate_json(filepath):
-    try:
-        with open(filepath, "r", encoding="utf-8") as f:
-            content = f.read().strip()
-        if not content:
-            return True, "skip (empty)"
-        json.loads(content)
-        return True, "JSON OK"
-    except json.JSONDecodeError as e:
-        return False, f"line {e.lineno} col {e.colno}: {e.msg}"
+### PostToolUse vs PreToolUse 的取捨
 
-# 根據副檔名路由到對應驗證器
-validators = { ".py": validate_python, ".json": validate_json }
-```
+這是一個設計上的微妙選擇：
 
-### Hook 時序的微妙之處
+- **PreToolUse**：能阻止操作，但看不到結果
+- **PostToolUse**：能看到結果，但操作已經執行
 
-PostToolUse 在工具**執行完成後**才觸發 — `block` 告訴模型操作失敗，但檔案已寫入磁碟。這是正確的取捨：
+對語法驗證，PostToolUse 是正確選擇——檔案短暫存在於磁碟上是無害的，但模型能立刻看到精確的錯誤訊息並被強制修正。
 
-- **PostToolUse**：能檢查結果，但無法阻止寫入
-- **PreToolUse**：能阻止執行，但看不到結果
+### 第二層的價值
 
-語法驗證用 PostToolUse 最理想 — 模型立刻獲得精確錯誤訊息，被迫修正後才能繼續。
+如果說第一層是「告訴模型不要犯錯」，第二層就是「不管模型記不記得，都自動檢查」。從我的實踐數據來看，**自動化護欄的效果大約是文字規則的 10 倍**。
 
 ---
 
-## 第三層：工作流模板 (Skills)
+## 第三層：工作流模板——把機構知識編碼成可執行的流程
 
-**解決的問題**：多步驟流程在時間壓力下被跳步。
+Skill 是可重用的 prompt 工作流，透過斜線指令觸發。它解決的問題是：**複雜的多步驟流程，在時間壓力下總有步驟被跳過**。
 
-Skills 是透過 `/commands` 觸發的可重用 prompt 工作流，編碼了「如何」執行複雜操作的機構知識。
+### 部署流程的演化
 
-### Deploy Skill
+以部署為例。我的部署流程有 7 個步驟，從範圍掃描到健康檢查到知識記錄。在沒有 skill 之前，後面幾步（健康檢查、Telegram 通知、Dev Diary）經常被跳過——不是故意的，而是「做完主要工作就覺得完成了」。
 
-部署流程有 **8 個必要步驟**。編碼為 skill 之前，我經常跳過健康檢查和通知：
+把它編碼成 `/deploy` skill 後，這個問題徹底消失。Skill 不允許你在步驟 4 就停下來。
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" style="width:100%;height:auto;max-width:100%;" font-family="'Noto Sans TC','Segoe UI',sans-serif">
-  <defs>
-    <filter id="sd2"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.1"/></filter>
-    <marker id="ar2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#bbb"/></marker>
-  </defs>
-  <rect width="800" height="200" rx="12" fill="#1e1e2e"/>
-  <text x="400" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#e0e0e0">/deploy — 驗證優先部署流程</text>
+### Specification by Example：需求理解的入口
 
-  <g filter="url(#sd2)">
-    <rect x="15" y="50" width="85" height="50" rx="8" fill="#667eea"/><text x="57" y="72" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Step 1</text><text x="57" y="88" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">範圍掃描</text>
-  </g>
-  <line x1="100" y1="75" x2="112" y2="75" stroke="#bbb" stroke-width="1.5" marker-end="url(#ar2)"/>
-  <g filter="url(#sd2)">
-    <rect x="117" y="50" width="85" height="50" rx="8" fill="#667eea"/><text x="159" y="72" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Step 2</text><text x="159" y="88" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">語法驗證</text>
-  </g>
-  <line x1="202" y1="75" x2="214" y2="75" stroke="#bbb" stroke-width="1.5" marker-end="url(#ar2)"/>
-  <g filter="url(#sd2)">
-    <rect x="219" y="50" width="85" height="50" rx="8" fill="#4facfe"/><text x="261" y="72" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Step 3</text><text x="261" y="88" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">Git Push</text>
-  </g>
-  <line x1="304" y1="75" x2="316" y2="75" stroke="#bbb" stroke-width="1.5" marker-end="url(#ar2)"/>
-  <g filter="url(#sd2)">
-    <rect x="321" y="50" width="85" height="50" rx="8" fill="#4facfe"/><text x="363" y="72" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Step 4</text><text x="363" y="88" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">SSH 部署</text>
-  </g>
-  <line x1="406" y1="75" x2="418" y2="75" stroke="#bbb" stroke-width="1.5" marker-end="url(#ar2)"/>
-  <g filter="url(#sd2)">
-    <rect x="423" y="45" width="95" height="60" rx="8" fill="#43e97b" stroke="#2d8a56" stroke-width="2"/><text x="470" y="70" text-anchor="middle" font-size="10" font-weight="bold" fill="#1a1a2e">Step 5</text><text x="470" y="86" text-anchor="middle" font-size="10" font-weight="bold" fill="#1a1a2e">健康檢查</text><text x="470" y="98" text-anchor="middle" font-size="8" fill="#2d8a56">關鍵步驟</text>
-  </g>
-  <line x1="518" y1="75" x2="530" y2="75" stroke="#bbb" stroke-width="1.5" marker-end="url(#ar2)"/>
-  <g filter="url(#sd2)">
-    <rect x="535" y="50" width="85" height="50" rx="8" fill="#f5576c"/><text x="577" y="72" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Step 6</text><text x="577" y="88" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">推送通知</text>
-  </g>
-  <line x1="620" y1="75" x2="632" y2="75" stroke="#bbb" stroke-width="1.5" marker-end="url(#ar2)"/>
-  <g filter="url(#sd2)">
-    <rect x="637" y="50" width="85" height="50" rx="8" fill="#fa709a"/><text x="679" y="72" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Step 7</text><text x="679" y="88" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">Dev Diary</text>
-  </g>
-  <line x1="722" y1="75" x2="734" y2="75" stroke="#bbb" stroke-width="1.5" marker-end="url(#ar2)"/>
-  <g filter="url(#sd2)">
-    <rect x="739" y="55" width="45" height="40" rx="8" fill="#43e97b"/><text x="761" y="80" text-anchor="middle" font-size="18" fill="white">&#10004;</text>
-  </g>
+這是我最近加入的 skill，也是對傳統開發流程最大的反思。
 
-  <rect x="15" y="125" width="769" height="60" rx="10" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)"/>
-  <text x="30" y="148" font-size="11" font-weight="bold" fill="#f5576c">關鍵洞見：</text>
-  <text x="130" y="148" font-size="11" fill="#ccc">Skill 編碼前，Step 5-7 經常被跳過。</text>
-  <text x="30" y="170" font-size="11" fill="#ccc">編碼為 /deploy 後，完整流程每次都被強制執行 — skill 不允許你提前停止。</text>
-</svg>
+傳統 TDD 在 AI 時代有一個根本性缺陷：**AI 同時寫測試和實作，等於自己批改自己的作業。** 測試成了 self-fulfilling prophecy，不是真正的規格。
 
-### SBE Skill：Specification by Example 作為開發入口
-
-傳統 TDD 在 Agentic 時代有一個根本性缺陷：**AI 同時寫測試和實作，等於自己批改自己的作業。** 測試變成 self-fulfilling prophecy，而非真正的規格。
-
-我設計了 `/spec-by-example` (SBE) skill 作為所有新功能開發的**強制入口**：
+我的解法是 `/spec-by-example`——在寫任何程式碼之前，先讓 AI 用具體的 Given/When/Then 例子表達它的理解，然後**人類確認這些例子**。只有通過確認 gate 後才進入開發。
 
 ```
-舊流程：需求 → 影響分析 → BDD 生成 → 實作
-新流程：需求 → /sbe（知識探查 + 具體例子 + 人類確認 Gate）→ 實作
+需求 → AI 產出具體例子 → 人類確認 → AI 實作
+         (暴露理解偏差)   (硬性 gate)   (根據確認的 spec)
 ```
 
-Skill 包含 6 個步驟：
+核心哲學：**在 Agentic 時代，specification 才是人類最有價值的貢獻。** AI 負責產出和實作，人類負責確認「AI 是否真的理解了我要什麼」。
 
-1. **需求解析** — AI 用自己的話重述需求，提早暴露理解偏差
-2. **知識探查** — 查詢 wiki MCP + grep codebase，繪製系統邊界地圖
-3. **Example Mapping** — 產出 3 類具體 Given/When/Then 例子：
-   - Happy path（正常行為）
-   - Edge cases（邊界情況）
-   - Error paths（錯誤處理）
-4. **人類確認 Gate** — 呈現所有例子給使用者。**不可跳過。** 使用者驗證、修正或新增例子後才能寫 code
-5. **Spec 持久化** — 將確認的 spec 寫入 `specs/sbe/` 作為唯一 acceptance criteria
-6. **轉入開發** — 將確認的例子轉化為測試骨架，再開始實作
+### Skill 之間的組合
 
-核心洞見：**在 Agentic 時代，specification 才是人類的貢獻。** AI 產出具體例子讓理解變得可驗證；人類確認或修正。AI 只能針對「自己不擁有的規格」寫 code。
+Skills 不是孤立的，它們形成工作流圖：
 
-這徹底消除了「誤解需求」類型的摩擦 — 誤解在 Step 3-4 就會浮現，而非部署之後。
+```
+需求 → /sbe（確認 spec）
+         → 實作
+           → /deploy（部署驗證）
+               → /devdiary（知識沉澱）
+```
+
+每個 skill 負責流程的一段，串聯起來就是完整的開發閉環。
 
 ---
 
-## 第四層：知識持久化
+## 第四層：知識持久化——打破土撥鼠日
 
-**解決的問題**：每個新 session 從零開始，重複過去的錯誤。
+AI Agent 最大的結構性弱點是**每個 session 從零開始**。上一次花了 30 分鐘釐清的設計決策，下一次又得重新解釋。
 
-我建構了 **3 層知識系統**：
+我用三層知識架構解決這個問題：
 
-### 第 1 層：Session 記憶 (MEMORY.md)
+### Session 記憶
 
-按類型組織的跨 session 記憶：
+跨 session 的持久化記憶，按類型分檔：
 
-```
-memory/
-├── MEMORY.md                              # 索引（總是載入）
-├── user_profile.md                        # 使用者輪廓
-├── feedback_no_polling.md                 # 「禁止提出 polling」
-├── feedback_verify_all_code_paths.md      # 「grep 所有位置」
-├── project_regime_redesign.md             # 專案進度
-└── ... (40+ 記憶檔案)
-```
+- **使用者輪廓**：角色、偏好、專業程度
+- **行為回饋**：使用者的糾正（正面和負面都記）
+- **專案狀態**：進行中的計畫和決策
 
-### 第 2 層：知識 Wiki (MCP 整合)
+目前累積了 40+ 個記憶檔案。關鍵是**同時記錄成功和失敗**——如果只記糾正，模型會變得過度保守。
 
-遵循 [Karpathy LLM Wiki](https://gist.github.com/karpathy) 架構：
+### 知識 Wiki
+
+採用 Karpathy LLM Wiki 三層架構：
 
 ```
-Schema 層 (CLAUDE.md) — 定義結構和規則
-         |
-raw/ — 不可變原始資料（LLM 只讀）
-         |
-wiki/ — LLM 編譯的知識層（LLM 完全擁有）
+CLAUDE.md — Schema 定義層（人+AI 共編）
+    ↓
+raw/    — 不可變原始資料（AI 只讀）
+    ↓ ingest
+wiki/   — AI 編譯的知識層（AI 完全擁有）
 ```
 
-透過 **MCP** 暴露 3 個工具：`search()`, `get_concept()`, `related()`。
+核心鐵律：**AI 絕不修改 raw/**。所有原始資料（系統匯出、文章、對話記錄）先進 raw/，然後透過 ingest 流程由 AI 消化重寫成 wiki/ 中的結構化知識。
 
-### 第 3 層：Dev Diary（機構學習）
+這個設計防止了「摘要的摘要」級聯損失——raw 永遠保存完整原文，ingest 可以反覆執行。
 
-每個任務產出結構化日誌：問題 → 分析 → 決策 → 實作 → 踩坑 → 心得。打破 AI 助手的「土撥鼠日」問題。
+Wiki 透過 MCP (Model Context Protocol) 暴露給 AI，提供 `search`、`get_concept`、`related` 三個查詢工具。每次接到新需求，AI 的第一步就是查 wiki 確認影響範圍和既有設計決策。
+
+### Dev Diary
+
+每個完成的任務都有結構化日誌：問題描述 → 分析過程 → 設計決策 → 實作要點 → 踩到的坑 → 核心心得。
+
+Dev Diary 的價值不只是記錄，而是**讓失敗的嘗試也成為知識資產**。很多時候，踩過的坑比成功的路徑更有價值。
 
 ---
 
-## 第五層：自我改善迴圈
+## 第五層：自我改善迴圈——用數據改善 harness 本身
 
-**解決的問題**：Harness 本身有盲點，只有數百個 session 後才會浮現。
+前四層構成了一個能運作的 harness。但如果只是「建好就不動」，它遲早會腐化——新的問題浮現，舊的規則變得過時。
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" style="width:100%;height:auto;max-width:100%;" font-family="'Noto Sans TC','Segoe UI',sans-serif">
-  <defs>
-    <filter id="sp2"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.1"/></filter>
-    <marker id="ap2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#bbb"/></marker>
-  </defs>
-  <rect width="800" height="220" rx="12" fill="#1e1e2e"/>
-  <text x="400" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#e0e0e0">PDCA 自我改善循環</text>
+第五層的職責是**讓 harness 自己變得更好**。
 
-  <g filter="url(#sp2)">
-    <rect x="50" y="60" width="150" height="70" rx="12" fill="#667eea"/><text x="125" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Plan</text><text x="125" y="108" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.8)">分析 /insights 報告</text><text x="125" y="122" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.8)">識別摩擦模式</text>
-  </g>
-  <line x1="200" y1="95" x2="230" y2="95" stroke="#bbb" stroke-width="2" marker-end="url(#ap2)"/>
-  <g filter="url(#sp2)">
-    <rect x="235" y="60" width="150" height="70" rx="12" fill="#4facfe"/><text x="310" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Do</text><text x="310" y="108" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.8)">新增 hooks, skills,</text><text x="310" y="122" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.8)">規則, 記憶</text>
-  </g>
-  <line x1="385" y1="95" x2="415" y2="95" stroke="#bbb" stroke-width="2" marker-end="url(#ap2)"/>
-  <g filter="url(#sp2)">
-    <rect x="420" y="60" width="150" height="70" rx="12" fill="#43e97b"/><text x="495" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Check</text><text x="495" y="108" text-anchor="middle" font-size="10" fill="rgba(0,0,0,0.5)">下次 /insights 與</text><text x="495" y="122" text-anchor="middle" font-size="10" fill="rgba(0,0,0,0.5)">Wiki 基線對照</text>
-  </g>
-  <line x1="570" y1="95" x2="600" y2="95" stroke="#bbb" stroke-width="2" marker-end="url(#ap2)"/>
-  <g filter="url(#sp2)">
-    <rect x="605" y="60" width="150" height="70" rx="12" fill="#fa709a"/><text x="680" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Act</text><text x="680" y="108" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.8)">推廣有效變更</text><text x="680" y="122" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.8)">移除無效變更</text>
-  </g>
+### PDCA 循環
 
-  <path d="M680,130 C680,180 125,180 125,130" stroke="#fee140" stroke-width="2" fill="none" stroke-dasharray="6,4"/>
-  <text x="400" y="178" text-anchor="middle" font-size="11" fill="#fee140">持續改善循環</text>
+```
+Plan  → 分析 Insights 報告，識別 friction 模式
+Do    → 實施改善（新規則、新 hook、新 skill）
+Check → 下次 Insights 與基線對照，驗證效果
+Act   → 保留有效的，移除無效的
+```
 
-  <rect x="50" y="195" width="700" height="20" rx="4" fill="rgba(255,255,255,0.05)"/>
-  <text x="400" y="210" text-anchor="middle" font-size="10" fill="#999">能衡量自己的 harness，才是能改善的 harness。</text>
-</svg>
+### 量化追蹤
 
-### 基線追蹤
-
-分析 702 個 sessions 後，建立追蹤摩擦指標的 wiki 頁面：
+光靠感覺是不夠的。我在 wiki 中建立了 friction 追蹤矩陣：
 
 | 摩擦類型 | 基線 | 目標 |
 |---------|------|------|
-| 錯誤方法 | 31 次 | &le; 10 |
-| Bug 程式碼 | 20 次 | &le; 8 |
-| 完全達成率 | 62% | &ge; 75% |
-| 指令失敗 | 196 次 | &le; 100 |
+| 錯誤方法（提出被禁止的方案）| 31 次 | ≤ 10 |
+| Bug 程式碼（語法/參數錯誤）| 20 次 | ≤ 8 |
+| 任務完全達成率 | 62% | ≥ 75% |
 
-### 數據揭示了什麼
+每次審視 Insights 時，更新矩陣、追加 review 歷程、對照目標。
 
-最令人意外的發現：**瓶頸不是規則缺失 — 而是執行不一致。**
+### Skill 自進化
 
-這改變了投資方向：從「寫更多規則」（第一層）轉向「建構自動化護欄」（第二層）。語法驗證 hook 在編輯時攔截錯誤。Deploy skill 強制執行過去被跳過的步驟。
+更有趣的是 `/skill-evolve`——它從 wiki 和 memory 中偵測 pattern，自動建議 skill 的更新。例如：
 
----
+- 同一類踩坑出現 2+ 次 → 在對應 skill 加入警告
+- 新的工作流 pattern 出現 3+ 次且無對應 skill → 建議建立新 skill
+- CLAUDE.md 某條指示反覆被忽略 → 建議強化措辭或改用 hook
 
-## 實戰數據
-
-21 天、702 個分析的 sessions：
-
-| 指標 | 值 |
-|------|-----|
-| 總 sessions | 1,195 (702 分析) |
-| 訊息數 | 10,276 (467/天) |
-| 完全達成率 | 62% |
-| 觸及檔案 | 541 |
-| 程式碼變更 | +31,011 / -2,349 行 |
-| Commits | 159 |
-| 最常用工具 | Bash (2,810 次) |
-| 遠端操作 | 620 次通訊工具呼叫 |
-
-### 最有效的模型能力
-
-| 能力 | 出現次數 |
-|------|---------|
-| 多檔案變更 | 41 sessions |
-| 優秀的除錯 | 39 sessions |
-| 清晰的解釋 | 36 sessions |
-| 主動幫助 | 17 sessions |
-
-### 主要摩擦來源
-
-| 類型 | 次數 | 根因 |
-|------|------|------|
-| 錯誤方法 | 31 | 模型傾向使用簡單 pattern |
-| Bug 程式碼 | 20 | 語法錯誤、錯誤參數 |
-| 誤解需求 | 4 | 簡短指令的歧義 |
+這讓 harness 從「人工維護」走向「半自動進化」。
 
 ---
 
-## 經驗教訓
+## 三個核心洞見
 
-### 1. 規則存在 ≠ 規則被遵守
+回顧整個實踐過程，有三件事是我一開始沒有預期到的：
 
-CLAUDE.md 覆蓋 90% 摩擦場景，模型仍犯同樣錯誤 31 次。**自動化強制執行 (hooks) 的價值是文字規則的 10 倍。**
+### 洞見一：自動化護欄 >> 文字規則
 
-### 2. Harness 應匹配互動風格
+這是最反直覺的。我花了大量時間撰寫詳盡的 CLAUDE.md 規則，覆蓋了 90% 的已知問題場景。但模型依然犯那些錯誤。
 
-我透過手機通訊 app 發簡短指令，期望端到端自主執行。我的 harness 為此優化：skills 編碼完整工作流、memory 跨 session 保存、hooks 即時攔截。
+轉折點是我開始加入 hook 之後——一個簡單的語法驗證 hook，在每次編輯後自動執行 `py_compile` 和 `json.loads`。效果立竿見影。
 
-結對程式設計需要不同 harness — 更注重解釋，更少自主。
+**教訓：不要期待模型「記住」規則。要把規則變成自動執行的程式。**
 
-### 3. 衡量 Harness，不只是產出
+### 洞見二：事件驅動思維適用於 harness 本身
 
-加入第五層前，我不知道「錯誤方法」是 #1 摩擦。我以為是 bug 程式碼。**衡量改變了投資優先級。**
+我在系統架構中堅持「事件驅動，禁止 polling」。後來發現同樣的原則也適用於 harness 的設計：
 
-### 4. 事件驅動思維也適用於 Harness
+- **Hook** = 事件驅動（工具觸發）→ 最有效
+- **Skill** = 指令驅動（明確呼叫）→ 有效
+- **Rule** = 被動等待（靠模型記憶）→ 最弱
 
-- **Hooks** 是事件驅動（工具觸發）— 有效
-- **規則** 是被動的（靠記憶力）— 較弱
-- **Skills** 是指令驅動（明確呼叫）— 有效
+最有效的 harness 元件是**反應式**的，不是**宣告式**的。
 
-最有效的 harness 元件是反應式的，不是宣告式的。
+### 洞見三：衡量改變了一切
 
-### 5. 知識系統需要關注點分離
+在加入第五層之前，我以為最大的問題是「bug 程式碼」。Insights 數據告訴我實際上是「錯誤方法」——模型提出我已經否決過的方案。
 
-- **Memory**：跨 session 上下文（誰、什麼、偏好）
-- **Wiki**：結構化演進知識（概念、架構）
-- **Dev Diary**：不可變學習記錄（發生什麼、為什麼）
+**如果我沒有衡量，我會持續投資在錯誤的方向。**
+
+這就是第五層存在的意義：不只是讓 harness 變好，而是讓你**知道該改善什麼**。
 
 ---
 
-## 如何開始
+## 仍在演進的下一步
 
-按順序從這些層級開始：
+Harness Engineering 不是一個「完成」的狀態，而是持續演化的過程。以下是我正在探索和規劃的方向：
 
-1. **CLAUDE.md** — 寫下 5 條不可協商規則。隨摩擦逐步添加。
-2. **一個 hook** — 主要語言的語法驗證器。立即見效。
-3. **一個 skill** — 最常重複的多步驟工作流。
-4. **Memory** — 記錄糾正。10 條回饋記憶就能顯著改善一致性。
-5. **衡量** — 50+ sessions 後執行 `/insights`。讓數據引導投資。
+### Knowledge Graph MCP
 
-Harness 不需要第一天就完美。關鍵是**儘早開始衡量**。
+目前的 wiki 是平面的 markdown 檔案。下一步是疊加圖層：
+
+- **Phase 2**：NetworkX 圖引擎 + MCP 暴露。wiki 頁面 = 節點，`[[related]]` = 邊。支援社群偵測（Louvain）、路徑查詢、核心概念辨識。
+- **Phase 3**：pgvector 語意搜尋。Hybrid retrieval：keyword + 圖遍歷 + 向量搜尋三路合併。
+
+目標是讓 AI 在接到需求時，不只是全文搜尋關鍵字，而是能**沿著概念關聯圖走**，找到間接但重要的影響。
+
+### 自主部署-驗證-回滾
+
+目前的 `/deploy` skill 仍然需要在 session 中手動觸發。未來的方向是：
+
+- AI 部署後自動查詢 Prometheus 指標
+- 如果 CPU/memory 超過閾值，自動回滾到上一版
+- 全程透過 Telegram 通知，不需要人工介入
+
+### Spec-Driven Development 深化
+
+`/spec-by-example` 目前只覆蓋功能需求。可以擴展到：
+
+- **Performance SBE**：Given 1000 concurrent requests, When hitting /api/xxx, Then response time < 200ms
+- **Observability SBE**：Given a service restart, When checking logs after 30s, Then zero ERROR entries
+- **Contract SBE**：Given service A publishes to channel X, When service B subscribes, Then data schema matches
+
+讓 SBE 成為所有品質面向的統一語言。
+
+### 多 Agent 協作
+
+當單一 agent 的能力達到天花板時，下一步是**多 agent 分工**：
+
+- 規格 Agent：專門負責 SBE 例子生成和知識查詢
+- 實作 Agent：根據確認的 spec 寫程式碼
+- 驗證 Agent：專門負責測試和部署驗證
+
+每個 agent 有自己的 harness 子集，透過 spec 文件作為溝通介面。
+
+---
+
+## 如何開始你自己的 Harness
+
+如果你也想建構 harness，我建議的順序是：
+
+1. **CLAUDE.md**——寫下 5 條你最痛的規則。不要試圖面面俱到，從痛點開始。
+2. **一個 Hook**——你主要語言的語法驗證器。投入 30 分鐘，立刻見效。
+3. **一個 Skill**——你最常重複的多步驟流程。把「你每次都做但有時候會忘」的流程寫成 skill。
+4. **開始記錄**——不需要完整的 wiki，從 dev diary 開始。每次任務記「踩了什麼坑、為什麼這樣做」。
+5. **衡量**——累積一段時間後回顧。哪些問題反覆出現？哪些規則沒被遵守？數據會告訴你下一步該做什麼。
+
+Harness 不需要在第一天就完美。它是一個活的系統，關鍵是**建立回饋迴圈，讓它自己變好**。
 
 ---
 
 ## 結語
 
-Harness Engineering 是建構 AI agent 作業系統的學科。模型是引擎；harness 是底盤、方向盤、煞車和導航。
+Harness Engineering 的本質不是「配置 AI 工具」，而是**建構一套讓 AI 能持續可靠運作的工程體系**。
 
-700+ sessions 後，我的 harness 從簡單的 CLAUDE.md 演化成 5 層系統。最重要的教訓：
+模型會升級、會換代，但好的 harness 是可以遷移的。行為規範、自動化護欄、工作流模板、知識架構、改善迴圈——這些是跨越模型世代的方法論。
 
-**能衡量自己的 harness，才是能改善的 harness。**
+我的 harness 仍在演化中。最重要的教訓是：
+
+> **能衡量自己的 harness，才是能改善的 harness。**
 
 ---
 
-*使用 [Claude Code](https://claude.ai/code) 建構。用 `/insights` 衡量。透過 PDCA 改善。*
+*使用 [Claude Code](https://claude.ai/code) 建構與實踐。*
 
-**參考資料：**
+**延伸閱讀：**
 - [Anthropic - Harness Design for Long-Running Apps](https://www.anthropic.com/engineering/harness-design-long-running-apps)
 - [Anthropic - Effective Harnesses for Long-Running Agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)
 - [Martin Fowler - Harness Engineering for Coding Agent Users](https://martinfowler.com/articles/harness-engineering.html)
-- [TechTalks - The Art of AI Harness Engineering](https://bdtechtalks.substack.com/p/the-art-of-ai-harness-engineering)
