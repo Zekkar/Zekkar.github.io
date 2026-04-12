@@ -45,7 +45,7 @@ This article documents my journey building a production-grade harness over **700
 
   <g filter="url(#s)"><rect x="40" y="136" width="720" height="56" rx="10" fill="url(#h4)"/><text x="70" y="162" font-size="13" font-weight="bold" fill="#1a1a2e">Layer 4</text><text x="140" y="162" font-size="14" font-weight="bold" fill="#1a1a2e">Knowledge Persistence</text><text x="460" y="162" font-size="12" fill="rgba(0,0,0,0.5)">Cross-session Memory | Wiki (MCP) | Dev Diary</text></g>
 
-  <g filter="url(#s)"><rect x="40" y="202" width="720" height="56" rx="10" fill="url(#h3)"/><text x="70" y="228" font-size="13" font-weight="bold" fill="white">Layer 3</text><text x="140" y="228" font-size="14" font-weight="bold" fill="white">Workflow Templates (Skills)</text><text x="460" y="228" font-size="12" fill="rgba(255,255,255,0.8)">/deploy | /devdiary | /health-check | /self-heal</text></g>
+  <g filter="url(#s)"><rect x="40" y="202" width="720" height="56" rx="10" fill="url(#h3)"/><text x="70" y="228" font-size="13" font-weight="bold" fill="white">Layer 3</text><text x="140" y="228" font-size="14" font-weight="bold" fill="white">Workflow Templates (Skills)</text><text x="460" y="228" font-size="12" fill="rgba(255,255,255,0.8)">/sbe | /deploy | /devdiary | /health-check</text></g>
 
   <g filter="url(#s)"><rect x="40" y="268" width="720" height="56" rx="10" fill="url(#h2)"/><text x="70" y="294" font-size="13" font-weight="bold" fill="white">Layer 2</text><text x="140" y="294" font-size="14" font-weight="bold" fill="white">Automated Guardrails (Hooks)</text><text x="460" y="294" font-size="12" fill="rgba(255,255,255,0.8)">Syntax Validator | Commit Guard | Cost Tracker</text></g>
 
@@ -217,6 +217,33 @@ User Request -> /deploy
                   |-- Step 7 calls /devdiary
                                      |-- Writes to knowledge base
 ```
+
+### The SBE Skill: Specification by Example as Development Entry Point
+
+Traditional TDD has a fundamental flaw in the agentic era: **the AI writes both the test and the implementation, grading its own homework.** The test becomes a self-fulfilling prophecy rather than a genuine specification.
+
+I solved this by creating a `/spec-by-example` (SBE) skill that serves as the **mandatory entry point** for all new feature development:
+
+```
+Old workflow: Requirement → Impact Analysis → BDD Generation → Implement
+New workflow: Requirement → /sbe (Knowledge + Examples + Human Gate) → Implement
+```
+
+The skill runs 6 steps:
+
+1. **Requirement Parsing** — AI restates the requirement in its own words, exposing misunderstandings early
+2. **Knowledge Exploration** — Queries wiki MCP + greps codebase to map system boundaries
+3. **Example Mapping** — Generates concrete Given/When/Then examples in 3 categories:
+   - Happy path (normal behavior)
+   - Edge cases (boundary conditions)
+   - Error paths (failure handling)
+4. **Human Confirmation Gate** — Presents all examples to the user. **Cannot be skipped.** The user validates, corrects, or adds examples before any code is written
+5. **Spec Persistence** — Writes confirmed spec to `specs/sbe/` as the single source of acceptance criteria
+6. **Transition to Development** — Converts confirmed examples into test skeletons, then implements
+
+The key insight: **in the agentic era, the specification IS the human's contribution.** The AI generates examples to make its understanding explicit; the human confirms or corrects. Only then does the AI code — against specifications it doesn't own.
+
+This eliminated the "misunderstood request" friction category entirely: the misunderstanding surfaces in Step 3-4, not after deployment.
 
 ---
 
