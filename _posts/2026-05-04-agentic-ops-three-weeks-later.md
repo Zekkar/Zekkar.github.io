@@ -23,6 +23,64 @@ toc_sticky: true
 
 ---
 
+## AgenticOps：四階段持續循環
+
+AgenticOps 的核心是一個永不停止的四階段閉環——每一輪循環結束後，系統比上一輪更聰明、更可靠。
+
+<figure style="text-align:center;margin:2rem 0">
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" style="max-width:700px;width:100%;font-family:'Segoe UI',Arial,sans-serif">
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#94a3b8"/></marker>
+  </defs>
+  <!-- bg -->
+  <rect width="700" height="420" fill="#f8fafc" rx="16"/>
+  <!-- center circle -->
+  <circle cx="350" cy="210" r="72" fill="#1e293b" opacity=".07"/>
+  <circle cx="350" cy="210" r="60" fill="#1e293b" opacity=".12"/>
+  <text x="350" y="204" text-anchor="middle" font-size="15" font-weight="700" fill="#1e293b">Agentic</text>
+  <text x="350" y="222" text-anchor="middle" font-size="15" font-weight="700" fill="#1e293b">Ops</text>
+  <!-- TOP: 計畫 -->
+  <rect x="240" y="18" width="220" height="78" rx="14" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="350" y="47" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8">① 計畫 Planning</text>
+  <text x="350" y="65" text-anchor="middle" font-size="12" fill="#3b82f6">SBE 需求 · 知識庫查詢</text>
+  <text x="350" y="81" text-anchor="middle" font-size="11" fill="#6b7280">假設審計 → 確認影響範圍</text>
+  <!-- RIGHT: 開發 -->
+  <rect x="530" y="160" width="155" height="100" rx="14" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="607" y="192" text-anchor="middle" font-size="14" font-weight="700" fill="#6d28d9">② 開發</text>
+  <text x="607" y="210" text-anchor="middle" font-size="12" fill="#8b5cf6">Harness + AI</text>
+  <text x="607" y="227" text-anchor="middle" font-size="11" fill="#6b7280">自我驗證·修復·再驗證</text>
+  <text x="607" y="243" text-anchor="middle" font-size="11" fill="#6b7280">並行 Subagent 協作</text>
+  <!-- BOTTOM: 驗證 -->
+  <rect x="240" y="320" width="220" height="78" rx="14" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+  <text x="350" y="350" text-anchor="middle" font-size="14" font-weight="700" fill="#065f46">③ 驗證 Verify</text>
+  <text x="350" y="368" text-anchor="middle" font-size="12" fill="#10b981">E2E · 部署健康檢查</text>
+  <text x="350" y="384" text-anchor="middle" font-size="11" fill="#6b7280">HTTP 200 ≠ 功能正確</text>
+  <!-- LEFT: 回饋學習 -->
+  <rect x="16" y="160" width="155" height="100" rx="14" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="93" y="192" text-anchor="middle" font-size="14" font-weight="700" fill="#92400e">④ 回饋學習</text>
+  <text x="93" y="210" text-anchor="middle" font-size="12" fill="#f59e0b">Wiki · 知識閉環</text>
+  <text x="93" y="227" text-anchor="middle" font-size="11" fill="#6b7280">Dev Diary → Ingest</text>
+  <text x="93" y="243" text-anchor="middle" font-size="11" fill="#6b7280">失敗模式 → 防重蹈</text>
+  <!-- Arrows clockwise -->
+  <!-- TOP → RIGHT -->
+  <path d="M 460 75 Q 590 80 600 160" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#ah)"/>
+  <!-- RIGHT → BOTTOM -->
+  <path d="M 610 260 Q 620 340 460 350" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#ah)"/>
+  <!-- BOTTOM → LEFT -->
+  <path d="M 240 362 Q 120 370 110 260" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#ah)"/>
+  <!-- LEFT → TOP -->
+  <path d="M 100 160 Q 90 75 240 68" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#ah)"/>
+  <!-- inner connections to center -->
+  <line x1="350" y1="96" x2="350" y2="150" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <line x1="530" y1="210" x2="410" y2="210" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <line x1="350" y1="320" x2="350" y2="270" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <line x1="171" y1="210" x2="290" y2="210" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4,3"/>
+</svg>
+<figcaption style="font-size:0.85rem;color:#6b7280;margin-top:0.5rem">AgenticOps 四階段持續循環——每輪結束後系統比上一輪更聰明</figcaption>
+</figure>
+
+---
+
 ## 清點三週的進展
 
 ### ✅ 已落地：Knowledge Graph MCP
@@ -115,6 +173,70 @@ L3 scanner 的雙路 AND fusion rule 是這樣設計的：
 
 真正有用的自愈系統，必須「沉默時讓人信任它，發聲時讓人重視它」。
 
+<figure style="text-align:center;margin:2rem 0">
+<svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" style="max-width:700px;width:100%;font-family:'Segoe UI',Arial,sans-serif">
+  <defs>
+    <marker id="a2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+    <marker id="a2r" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#ef4444"/></marker>
+  </defs>
+  <rect width="700" height="340" fill="#f8fafc" rx="16"/>
+  <text x="350" y="32" text-anchor="middle" font-size="15" font-weight="700" fill="#1e293b">L3 Auto-Fix Scanner：三路偵測 × 雙路 AND Fusion</text>
+  <!-- Sources -->
+  <rect x="20" y="60" width="140" height="60" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+  <text x="90" y="85" text-anchor="middle" font-size="13" font-weight="700" fill="#c2410c">Prometheus</text>
+  <text x="90" y="103" text-anchor="middle" font-size="11" fill="#ea580c">Metrics / Alerts</text>
+  <rect x="20" y="145" width="140" height="60" rx="10" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="90" y="170" text-anchor="middle" font-size="13" font-weight="700" fill="#6d28d9">Tempo</text>
+  <text x="90" y="188" text-anchor="middle" font-size="11" fill="#8b5cf6">Error Traces</text>
+  <rect x="20" y="230" width="140" height="60" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+  <text x="90" y="255" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">Loki</text>
+  <text x="90" y="273" text-anchor="middle" font-size="11" fill="#10b981">ERROR Logs</text>
+  <!-- Arrows to fusion -->
+  <line x1="160" y1="90" x2="250" y2="140" stroke="#64748b" stroke-width="1.5" marker-end="url(#a2)"/>
+  <line x1="160" y1="175" x2="250" y2="195" stroke="#64748b" stroke-width="1.5" marker-end="url(#a2)"/>
+  <line x1="160" y1="260" x2="250" y2="215" stroke="#64748b" stroke-width="1.5" marker-end="url(#a2)"/>
+  <!-- AND Fusion box -->
+  <rect x="250" y="145" width="150" height="90" rx="12" fill="#1e293b"/>
+  <text x="325" y="180" text-anchor="middle" font-size="13" font-weight="700" fill="#f1f5f9">AND Fusion</text>
+  <text x="325" y="198" text-anchor="middle" font-size="12" fill="#94a3b8">Tempo ∩ Loki</text>
+  <text x="325" y="214" text-anchor="middle" font-size="11" fill="#64748b">同一 TraceId</text>
+  <text x="325" y="228" text-anchor="middle" font-size="10" fill="#475569">Prometheus 獨立標記</text>
+  <!-- Arrow to decision -->
+  <line x1="400" y1="190" x2="450" y2="190" stroke="#64748b" stroke-width="2" marker-end="url(#a2)"/>
+  <!-- Decision diamond -->
+  <polygon points="490,165 540,190 490,215 440,190" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+  <text x="490" y="187" text-anchor="middle" font-size="11" font-weight="700" fill="#713f12">有效</text>
+  <text x="490" y="201" text-anchor="middle" font-size="11" font-weight="700" fill="#713f12">事件?</text>
+  <!-- No → silence -->
+  <line x1="490" y1="215" x2="490" y2="265" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#a2)"/>
+  <text x="500" y="248" font-size="11" fill="#94a3b8">否</text>
+  <rect x="440" y="265" width="100" height="40" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="490" y="281" text-anchor="middle" font-size="11" fill="#94a3b8">靜默釋放</text>
+  <text x="490" y="297" text-anchor="middle" font-size="10" fill="#cbd5e1">避免警報疲勞</text>
+  <!-- Yes → proposal -->
+  <line x1="540" y1="190" x2="590" y2="190" stroke="#ef4444" stroke-width="2" marker-end="url(#a2r)"/>
+  <text x="563" y="183" font-size="11" fill="#ef4444">是</text>
+  <!-- Stages -->
+  <rect x="590" y="60" width="95" height="50" rx="8" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+  <text x="637" y="81" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">Dry-run</text>
+  <text x="637" y="97" text-anchor="middle" font-size="11" fill="#ef4444">提案產生</text>
+  <rect x="590" y="130" width="95" height="50" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="637" y="151" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e">觀察期</text>
+  <text x="637" y="167" text-anchor="middle" font-size="11" fill="#f59e0b">精準度 ≥ 95%</text>
+  <rect x="590" y="200" width="95" height="50" rx="8" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+  <text x="637" y="221" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">執行</text>
+  <text x="637" y="237" text-anchor="middle" font-size="11" fill="#10b981">Slice 2 未來</text>
+  <!-- vertical arrow between stages -->
+  <line x1="637" y1="110" x2="637" y2="130" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#a2)"/>
+  <line x1="637" y1="180" x2="637" y2="200" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#a2)"/>
+  <!-- connection from decision to stage 1 -->
+  <line x1="637" y1="190" x2="637" y2="110" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <!-- Trust label -->
+  <text x="350" y="320" text-anchor="middle" font-size="12" fill="#64748b" font-style="italic">「自動化信任需要被賺取，不能被假設」— 沉默時可信，發聲時被重視</text>
+</svg>
+<figcaption style="font-size:0.85rem;color:#6b7280;margin-top:0.5rem">L3 三路偵測架構：雙路 AND Fusion 過濾雜訊，確保每個告警都值得被處理</figcaption>
+</figure>
+
 ---
 
 ## 一個沒有預見到的新模式
@@ -198,6 +320,47 @@ SBE 定義的例子
 這不是「測試覆蓋率」，而是「**需求覆蓋率**」——有多少 SBE 例子被 E2E 自動化保護。
 
 目前我還沒有看到成熟的框架將 SBE 例子和 E2E 自動化場景自動關聯、追蹤覆蓋率。這可能是 AI-assisted 開發工具鏈的下一個演化點。
+
+<figure style="text-align:center;margin:2rem 0">
+<svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" style="max-width:700px;width:100%;font-family:'Segoe UI',Arial,sans-serif">
+  <defs>
+    <marker id="a3" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+    <marker id="a3g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#10b981"/></marker>
+  </defs>
+  <rect width="700" height="300" fill="#f8fafc" rx="16"/>
+  <text x="350" y="32" text-anchor="middle" font-size="15" font-weight="700" fill="#1e293b">E2E 活規格文件：需求覆蓋率自我增長循環</text>
+  <!-- Stage boxes -->
+  <rect x="20" y="90" width="120" height="90" rx="12" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="80" y="120" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">SBE</text>
+  <text x="80" y="138" text-anchor="middle" font-size="11" fill="#3b82f6">需求例子</text>
+  <text x="80" y="155" text-anchor="middle" font-size="10" fill="#6b7280">Given/When/Then</text>
+  <text x="80" y="170" text-anchor="middle" font-size="10" fill="#6b7280">業務行為定義</text>
+  <line x1="140" y1="135" x2="175" y2="135" stroke="#64748b" stroke-width="2" marker-end="url(#a3)"/>
+  <rect x="175" y="90" width="120" height="90" rx="12" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="235" y="120" text-anchor="middle" font-size="13" font-weight="700" fill="#6d28d9">E2E 自動化</text>
+  <text x="235" y="138" text-anchor="middle" font-size="11" fill="#8b5cf6">Playwright</text>
+  <text x="235" y="155" text-anchor="middle" font-size="10" fill="#6b7280">Golden Path</text>
+  <text x="235" y="170" text-anchor="middle" font-size="10" fill="#6b7280">每次部署自動跑</text>
+  <line x1="295" y1="135" x2="330" y2="135" stroke="#64748b" stroke-width="2" marker-end="url(#a3)"/>
+  <rect x="330" y="90" width="120" height="90" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="390" y="117" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">需求覆蓋率</text>
+  <text x="390" y="135" text-anchor="middle" font-size="11" fill="#f59e0b">Coverage Tracking</text>
+  <text x="390" y="152" text-anchor="middle" font-size="10" fill="#6b7280">哪些例子有 E2E 保護</text>
+  <text x="390" y="167" text-anchor="middle" font-size="10" fill="#6b7280">哪些尚未覆蓋</text>
+  <line x1="450" y1="135" x2="485" y2="135" stroke="#64748b" stroke-width="2" marker-end="url(#a3)"/>
+  <rect x="485" y="90" width="120" height="90" rx="12" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+  <text x="545" y="120" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">系統演進</text>
+  <text x="545" y="138" text-anchor="middle" font-size="11" fill="#10b981">新功能部署</text>
+  <text x="545" y="155" text-anchor="middle" font-size="10" fill="#6b7280">迴歸檢測</text>
+  <text x="545" y="170" text-anchor="middle" font-size="10" fill="#6b7280">設計變更</text>
+  <!-- Feedback arrow back from system evolve to SBE (bottom arc) -->
+  <path d="M 545 180 Q 545 240 390 255 Q 235 270 80 235 Q 40 220 40 180" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#a3g)"/>
+  <text x="312" y="272" text-anchor="middle" font-size="12" fill="#10b981" font-weight="600">SBE 例子隨系統演進自我增長</text>
+  <!-- Bottom label -->
+  <text x="350" y="292" text-anchor="middle" font-size="11" fill="#94a3b8">目標：E2E 測試不只是「測試」，而是永遠準確反映業務規格的活文件</text>
+</svg>
+<figcaption style="font-size:0.85rem;color:#6b7280;margin-top:0.5rem">E2E 活規格文件演化：需求覆蓋率追蹤讓測試套件隨系統自我增長</figcaption>
+</figure>
 
 ---
 
