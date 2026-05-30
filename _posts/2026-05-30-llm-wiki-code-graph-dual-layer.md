@@ -196,13 +196,62 @@ Code Graph 建立之後，搜尋是最常被呼叫的功能。但我很快發現
 
 IntentRouter 用正規表達式分析查詢字串，識別意圖類型和信心分數。毫秒級，不呼叫任何 API：
 
-```
-查詢含「在哪/路徑/哪個檔案」 → location  （TF-IDF 優先）
-查詢含「是什麼/解釋/原理」   → concept   （向量優先）
-查詢含「關係/影響/連結」     → relation  （圖遍歷 + 向量）
-查詢含「錯誤/修復/Exception」 → failure   （失敗模式 boost）
-其他                        → default   （full hybrid）
-```
+<figure style="text-align:center;margin:2rem 0">
+<svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" style="max-width:760px;width:100%;font-family:'Segoe UI','Microsoft JhengHei',sans-serif">
+  <rect width="760" height="320" fill="#f8fafc" rx="16"/>
+  <text x="380" y="26" text-anchor="middle" font-size="14" font-weight="700" fill="#1e293b">Pass 1：IntentRouter 意圖分類</text>
+  <defs>
+    <marker id="ir1" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M0,0 L0,7 L7,3.5 z" fill="#94a3b8"/></marker>
+    <marker id="ir2" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M0,0 L0,7 L7,3.5 z" fill="#a855f7"/></marker>
+  </defs>
+  <!-- Input -->
+  <rect x="280" y="36" width="200" height="40" rx="10" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+  <text x="380" y="55" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">查詢文字</text>
+  <text x="380" y="70" text-anchor="middle" font-size="10" fill="#64748b">User query input</text>
+  <line x1="380" y1="76" x2="380" y2="100" stroke="#94a3b8" stroke-width="2" marker-end="url(#ir1)"/>
+  <!-- Pass 1 box -->
+  <rect x="140" y="100" width="480" height="52" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="380" y="122" text-anchor="middle" font-size="12" font-weight="700" fill="#4c1d95">Pass 1：Regex Pattern Matching</text>
+  <text x="380" y="140" text-anchor="middle" font-size="10" fill="#5b21b6">zero latency — 零 token — 毫秒級分類</text>
+  <!-- Branch arrows -->
+  <line x1="200" y1="152" x2="102" y2="180" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ir1)"/>
+  <line x1="300" y1="152" x2="265" y2="180" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ir1)"/>
+  <line x1="460" y1="152" x2="495" y2="180" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ir1)"/>
+  <line x1="560" y1="152" x2="657" y2="180" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ir1)"/>
+  <!-- location -->
+  <rect x="20" y="180" width="165" height="88" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="102" y="200" text-anchor="middle" font-size="12" font-weight="700" fill="#1e3a8a">location</text>
+  <text x="102" y="215" text-anchor="middle" font-size="10" fill="#1d4ed8">在哪/路徑/哪個檔案</text>
+  <text x="102" y="233" text-anchor="middle" font-size="11" font-weight="600" fill="#1e40af">→ TF-IDF</text>
+  <text x="102" y="249" text-anchor="middle" font-size="10" fill="#1d4ed8">關鍵字精準匹配</text>
+  <text x="102" y="263" text-anchor="middle" font-size="10" fill="#3b82f6">符號名搜尋優先</text>
+  <!-- concept -->
+  <rect x="197" y="180" width="136" height="88" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+  <text x="265" y="200" text-anchor="middle" font-size="12" font-weight="700" fill="#064e3b">concept</text>
+  <text x="265" y="215" text-anchor="middle" font-size="10" fill="#065f46">是什麼/解釋/原理</text>
+  <text x="265" y="233" text-anchor="middle" font-size="11" font-weight="600" fill="#047857">→ 向量相似度</text>
+  <text x="265" y="249" text-anchor="middle" font-size="10" fill="#065f46">語意理解優先</text>
+  <text x="265" y="263" text-anchor="middle" font-size="10" fill="#10b981">cosine similarity</text>
+  <!-- relation -->
+  <rect x="428" y="180" width="136" height="88" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="496" y="200" text-anchor="middle" font-size="12" font-weight="700" fill="#78350f">relation</text>
+  <text x="496" y="215" text-anchor="middle" font-size="10" fill="#92400e">關係/影響/連結</text>
+  <text x="496" y="233" text-anchor="middle" font-size="11" font-weight="600" fill="#b45309">→ 圖遍歷+向量</text>
+  <text x="496" y="249" text-anchor="middle" font-size="10" fill="#92400e">NetworkX 節點間</text>
+  <text x="496" y="263" text-anchor="middle" font-size="10" fill="#d97706">雙節點關聯</text>
+  <!-- failure -->
+  <rect x="574" y="180" width="165" height="88" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="657" y="200" text-anchor="middle" font-size="12" font-weight="700" fill="#7f1d1d">failure</text>
+  <text x="657" y="215" text-anchor="middle" font-size="10" fill="#991b1b">錯誤/修復/Exception</text>
+  <text x="657" y="233" text-anchor="middle" font-size="11" font-weight="600" fill="#b91c1c">→ 向量+boost</text>
+  <text x="657" y="249" text-anchor="middle" font-size="10" fill="#991b1b">失敗模式頁面</text>
+  <text x="657" y="263" text-anchor="middle" font-size="10" fill="#ef4444">score ×1.5</text>
+  <!-- Pass 2 conditional dashed -->
+  <line x1="380" y1="152" x2="380" y2="286" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#ir2)"/>
+  <rect x="185" y="286" width="390" height="26" rx="8" fill="#fdf4ff" stroke="#a855f7" stroke-width="1.5"/>
+  <text x="380" y="303" text-anchor="middle" font-size="10" font-weight="600" fill="#7e22ce">Pass 2（按需）：LLM 擴展 — score &lt; 0.5 或多概念時觸發</text>
+</svg>
+</figure>
 
 **Pass 2：LLM 查詢擴展（按需觸發，避免浪費 token）**
 
@@ -423,13 +472,71 @@ builders = [
 </svg>
 </figure>
 
-在這個基礎上，現在又加入了兩個自動化層：
+在這個基礎上，又加入了兩個自動化層——完整的六步閉環如下：
 
-**⑤ 週品質評估 cron**（每週六 09:00）：自動測試 wiki 命中率 → 調整衰減參數 λ → 掃描 memory 重複項 → Telegram 推送報告。系統自我評估，不需人工判斷品質。
-
-**⑥ 主動知識注入**（每次分析自動觸發）：WikiContextEnricher 在 Agent 執行市場分析時，主動根據當前經濟事件 + Regime 查詢知識庫，將相關背景注入 LLM prompt。Agent 不需要問，系統主動推送。
-
-完整閉環：**① 原始資料產生 → ② Ingest → ③④ 圖譜同步 → ⑤ 品質校準 → ⑥ 即時查詢 + 主動增強**
+<figure style="text-align:center;margin:2rem 0">
+<svg viewBox="0 0 760 175" xmlns="http://www.w3.org/2000/svg" style="max-width:760px;width:100%;font-family:'Segoe UI','Microsoft JhengHei',sans-serif">
+  <rect width="760" height="175" fill="#f8fafc" rx="16"/>
+  <text x="380" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">完整六步自動化閉環</text>
+  <defs>
+    <marker id="fa" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#94a3b8"/></marker>
+  </defs>
+  <!-- Box 1 -->
+  <rect x="12" y="38" width="108" height="120" rx="9" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="66" y="60" text-anchor="middle" font-size="18" fill="#92400e">①</text>
+  <text x="66" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#78350f">原始資料</text>
+  <text x="66" y="96" text-anchor="middle" font-size="9" fill="#92400e">devdiary/</text>
+  <text x="66" y="110" text-anchor="middle" font-size="9" fill="#92400e">specs/</text>
+  <text x="66" y="148" text-anchor="middle" font-size="9" fill="#d97706">持續</text>
+  <!-- Arrow 1→2 -->
+  <line x1="120" y1="98" x2="132" y2="98" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#fa)"/>
+  <!-- Box 2 -->
+  <rect x="133" y="38" width="108" height="120" rx="9" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="187" y="60" text-anchor="middle" font-size="18" fill="#4c1d95">②</text>
+  <text x="187" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#4c1d95">LLM Ingest</text>
+  <text x="187" y="96" text-anchor="middle" font-size="9" fill="#5b21b6">raw/ 掃描</text>
+  <text x="187" y="110" text-anchor="middle" font-size="9" fill="#5b21b6">wiki/ 更新</text>
+  <text x="187" y="148" text-anchor="middle" font-size="9" fill="#7c3aed">定期</text>
+  <!-- Arrow 2→3 -->
+  <line x1="241" y1="98" x2="253" y2="98" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#fa)"/>
+  <!-- Box 3 -->
+  <rect x="254" y="38" width="108" height="120" rx="9" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="308" y="60" text-anchor="middle" font-size="18" fill="#1e3a8a">③</text>
+  <text x="308" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#1e3a8a">圖譜同步</text>
+  <text x="308" y="96" text-anchor="middle" font-size="9" fill="#1d4ed8">graph 重建</text>
+  <text x="308" y="110" text-anchor="middle" font-size="9" fill="#1d4ed8">embedding refresh</text>
+  <text x="308" y="148" text-anchor="middle" font-size="9" fill="#2563eb">wiki 更新觸發</text>
+  <!-- Arrow 3→4 -->
+  <line x1="362" y1="98" x2="374" y2="98" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#fa)"/>
+  <!-- Box 4 -->
+  <rect x="375" y="38" width="108" height="120" rx="9" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+  <text x="429" y="60" text-anchor="middle" font-size="18" fill="#064e3b">④</text>
+  <text x="429" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#064e3b">Code Relink</text>
+  <text x="429" y="96" text-anchor="middle" font-size="9" fill="#065f46">symbols 掃描</text>
+  <text x="429" y="110" text-anchor="middle" font-size="9" fill="#065f46">name+embedding</text>
+  <text x="429" y="148" text-anchor="middle" font-size="9" fill="#059669">每週一次</text>
+  <!-- Arrow 4→5 -->
+  <line x1="483" y1="98" x2="495" y2="98" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#fa)"/>
+  <!-- Box 5 NEW -->
+  <rect x="496" y="38" width="108" height="120" rx="9" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/>
+  <text x="550" y="60" text-anchor="middle" font-size="18" fill="#7c2d12">⑤</text>
+  <text x="550" y="78" text-anchor="middle" font-size="11" font-weight="700" fill="#7c2d12">週品質評估</text>
+  <text x="550" y="94" text-anchor="middle" font-size="9" fill="#9a3412">命中率測試</text>
+  <text x="550" y="108" text-anchor="middle" font-size="9" fill="#9a3412">λ 自動校準</text>
+  <text x="550" y="122" text-anchor="middle" font-size="9" fill="#9a3412">memory 掃重複</text>
+  <text x="550" y="148" text-anchor="middle" font-size="9" fill="#ea580c">每週六 09:00</text>
+  <!-- Arrow 5→6 -->
+  <line x1="604" y1="98" x2="616" y2="98" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#fa)"/>
+  <!-- Box 6 NEW -->
+  <rect x="617" y="38" width="131" height="120" rx="9" fill="#f3e8ff" stroke="#9333ea" stroke-width="2"/>
+  <text x="682" y="60" text-anchor="middle" font-size="18" fill="#581c87">⑥</text>
+  <text x="682" y="78" text-anchor="middle" font-size="11" font-weight="700" fill="#581c87">查詢+主動注入</text>
+  <text x="682" y="94" text-anchor="middle" font-size="9" fill="#6b21a8">意圖感知搜尋</text>
+  <text x="682" y="108" text-anchor="middle" font-size="9" fill="#6b21a8">wiki context 推送</text>
+  <text x="682" y="122" text-anchor="middle" font-size="9" fill="#6b21a8">LLM 自動增強</text>
+  <text x="682" y="148" text-anchor="middle" font-size="9" fill="#9333ea">即時＋每次分析</text>
+</svg>
+</figure>
 
 ---
 
