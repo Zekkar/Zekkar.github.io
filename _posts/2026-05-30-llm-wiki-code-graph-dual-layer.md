@@ -56,35 +56,72 @@ toc_sticky: true
 
 ### 3.2 三層架構
 
-```
-raw/          ← 不可變原始資料層（人類 + 外部系統寫入）
-  devdiary/   ← 每日開發日誌、踩坑、架構決策
-  specs/      ← 模組設計規格文件
-  articles/   ← 收藏的文章、書摘、外部資料
+<figure style="text-align:center;margin:2rem 0">
+<svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" style="max-width:760px;width:100%;font-family:'Segoe UI','Microsoft JhengHei',sans-serif">
+  <rect width="760" height="340" fill="#f8fafc" rx="16"/>
 
-wiki/         ← LLM 編譯的知識層（Agent 完全擁有）
-  概念/       ← 提煉後的概念頁面
-  系統/       ← 系統架構知識
-  失敗模式/   ← 結構化的錯誤教訓
-```
+  <!-- raw/ box -->
+  <rect x="30" y="30" width="290" height="270" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="175" y="58" text-anchor="middle" font-size="15" font-weight="700" fill="#92400e">raw/</text>
+  <text x="175" y="76" text-anchor="middle" font-size="11" fill="#b45309">不可變原始資料層（人類寫入）</text>
+
+  <rect x="50" y="90" width="250" height="46" rx="8" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="175" y="110" text-anchor="middle" font-size="13" font-weight="600" fill="#78350f">devdiary/</text>
+  <text x="175" y="126" text-anchor="middle" font-size="11" fill="#92400e">每日踩坑、決策、架構日誌</text>
+
+  <rect x="50" y="148" width="250" height="46" rx="8" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="175" y="168" text-anchor="middle" font-size="13" font-weight="600" fill="#78350f">specs/</text>
+  <text x="175" y="184" text-anchor="middle" font-size="11" fill="#92400e">模組設計規格文件</text>
+
+  <rect x="50" y="206" width="250" height="46" rx="8" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="175" y="226" text-anchor="middle" font-size="13" font-weight="600" fill="#78350f">articles/</text>
+  <text x="175" y="242" text-anchor="middle" font-size="11" fill="#92400e">收藏文章、書摘、外部資料</text>
+
+  <text x="175" y="282" text-anchor="middle" font-size="10" fill="#d97706">✦ 只可新增，不可改寫</text>
+
+  <!-- ingest arrow -->
+  <line x1="322" y1="170" x2="430" y2="170" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <rect x="324" y="148" width="102" height="44" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="375" y="166" text-anchor="middle" font-size="12" font-weight="700" fill="#4c1d95">LLM</text>
+  <text x="375" y="182" text-anchor="middle" font-size="11" fill="#5b21b6">Ingest</text>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+
+  <!-- wiki/ box -->
+  <rect x="440" y="30" width="290" height="270" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="585" y="58" text-anchor="middle" font-size="15" font-weight="700" fill="#1e3a8a">wiki/</text>
+  <text x="585" y="76" text-anchor="middle" font-size="11" fill="#1d4ed8">LLM 編譯的知識層（Agent 擁有）</text>
+
+  <rect x="460" y="90" width="250" height="46" rx="8" fill="#eff6ff" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="585" y="110" text-anchor="middle" font-size="13" font-weight="600" fill="#1e3a8a">概念/</text>
+  <text x="585" y="126" text-anchor="middle" font-size="11" fill="#1d4ed8">提煉後的概念頁面</text>
+
+  <rect x="460" y="148" width="250" height="46" rx="8" fill="#eff6ff" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="585" y="168" text-anchor="middle" font-size="13" font-weight="600" fill="#1e3a8a">系統/</text>
+  <text x="585" y="184" text-anchor="middle" font-size="11" fill="#1d4ed8">系統架構知識</text>
+
+  <rect x="460" y="206" width="250" height="46" rx="8" fill="#eff6ff" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="585" y="226" text-anchor="middle" font-size="13" font-weight="600" fill="#1e3a8a">失敗模式/</text>
+  <text x="585" y="242" text-anchor="middle" font-size="11" fill="#1d4ed8">結構化的錯誤教訓</text>
+
+  <text x="585" y="282" text-anchor="middle" font-size="10" fill="#2563eb">✦ LLM 重寫，非 raw 副本</text>
+</svg>
+</figure>
 
 有一條鐵律：`raw/` 的內容永遠不能直接複製到 `wiki/`。`wiki/` 必須是 LLM 重寫後的結果，不是原始資料的副本。違反這條規則會讓 `wiki/` 退化成一個結構差的鏡像，而不是真正的知識提煉。
 
 ### 3.3 Ingest Pipeline
 
-```
-raw/ 新檔案
-    ↓
-LLM 掃描（哪些值得加入知識庫？）
-    ↓
-對候選項目：
-  - 新概念 → 從模板建立 wiki 頁面
-  - 既有概念 → 追加觀察紀錄 + 重寫核心結論段落
-    ↓
-更新 index.md + log.md（記錄處理了哪些 raw、影響哪些 wiki）
-```
+1. **掃描** — LLM 讀取 `raw/` 中未處理的新檔案，判斷哪些值得加入知識庫
+2. **分類處理**
+   - 全新概念 → 從模板建立新的 wiki 頁面
+   - 既有概念有新資料 → 追加觀察紀錄，重寫「核心結論」段落
+3. **更新索引** — 寫入 `wiki/index.md`（頁面清單）和 `wiki/log.md`（本次處理了哪些 raw、影響哪些 wiki）
 
-為什麼這樣設計？
+這樣設計的理由：
 
 - **Raw 是事實紀錄**，保留完整 context，不被 LLM 的「聰明」改寫
 - **Wiki 是 LLM 的工作記憶**，用 LLM 自己的語言整理，查詢時自然更準確
@@ -168,14 +205,18 @@ score = similarity × exp(-λ × age_in_days)
 
 解法是一個 lookup table：`evergreen_concepts(concept_name, reason)`。
 
-在排序 SQL 裡，用 LEFT JOIN + CASE WHEN 判斷：
+在排序時，系統用 LEFT JOIN 查詢 evergreen 清單，再用 CASE WHEN 決定是否套用衰減：
 
-```
-如果在 evergreen list → 直接用原始 similarity（不衰減）
-否則 → 乘以時間衰減係數
-```
+- **在 evergreen 清單中** → 直接用原始 cosine similarity，不乘任何係數
+- **不在清單中** → 乘以 `exp(-λ × age_days)`，時間越久分數越低
 
 這樣 evergreen 的知識永遠保持它應得的排名，而時效性知識隨時間自然淡出。
+
+適合加入 evergreen 清單的概念類型：
+- 技術指標定義（VIX、Sharpe Ratio、Delta/Gamma/Vega 等 Greeks）
+- 數學公式與統計方法（Kelly 公式、共整合、半衰期估計）
+- 系統設計原則（事件驅動、CQRS、高內聚低耦合）
+- 不隨市況改變的歷史教訓
 
 ---
 
@@ -183,25 +224,79 @@ score = similarity × exp(-λ × age_in_days)
 
 把三個層（Wiki、Code Graph、時間感知搜尋）整合在一起，日常運作是這樣的：
 
-```
-1. 開發 / 學習活動產生原始資料
-   → 自動或手動寫入 raw/devdiary/、raw/specs/
+<figure style="text-align:center;margin:2rem 0">
+<svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" style="max-width:760px;width:100%;font-family:'Segoe UI','Microsoft JhengHei',sans-serif">
+  <rect width="760" height="280" fill="#f8fafc" rx="16"/>
+  <text x="380" y="30" text-anchor="middle" font-size="14" font-weight="700" fill="#1e293b">日常運作流程</text>
 
-2. 定期 ingest（手動觸發）
-   → LLM 掃描 raw/，產出 / 更新 wiki/ 頁面
+  <!-- Step boxes -->
+  <!-- Step 1 -->
+  <rect x="20" y="50" width="128" height="180" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="84" y="76" text-anchor="middle" font-size="20" fill="#92400e">①</text>
+  <text x="84" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#78350f">原始資料</text>
+  <text x="84" y="118" text-anchor="middle" font-size="10" fill="#92400e">開發 / 學習</text>
+  <text x="84" y="134" text-anchor="middle" font-size="10" fill="#92400e">活動產生</text>
+  <text x="84" y="154" text-anchor="middle" font-size="10" fill="#b45309">raw/devdiary/</text>
+  <text x="84" y="170" text-anchor="middle" font-size="10" fill="#b45309">raw/specs/</text>
 
-3. 知識圖譜同步
-   → git pull wiki + 重建 in-memory graph（NetworkX + TF-IDF）
-   → 增量 embedding refresh（只更新有變動的 wiki 段落）
+  <!-- Arrow 1→2 -->
+  <path d="M150,140 L168,140" stroke="#94a3b8" stroke-width="2" marker-end="url(#a2)"/>
+  <defs>
+    <marker id="a2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
 
-4. Code-Wiki 重新連結（通常每週一次）
-   → 靜態分析掃描所有 code symbols
-   → 重算 name_match + embedding_match 連結（含時間衰減）
+  <!-- Step 2 -->
+  <rect x="170" y="50" width="128" height="180" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="234" y="76" text-anchor="middle" font-size="20" fill="#4c1d95">②</text>
+  <text x="234" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#4c1d95">LLM Ingest</text>
+  <text x="234" y="118" text-anchor="middle" font-size="10" fill="#5b21b6">掃描 raw/</text>
+  <text x="234" y="134" text-anchor="middle" font-size="10" fill="#5b21b6">產出 / 更新</text>
+  <text x="234" y="150" text-anchor="middle" font-size="10" fill="#5b21b6">wiki/ 頁面</text>
+  <text x="234" y="170" text-anchor="middle" font-size="10" fill="#7c3aed">手動觸發</text>
 
-5. Agent 工作時的查詢
-   → wiki 搜尋：語意 + 時間衰減排序 → 取相關概念
-   → code graph 查詢：某函式連結到哪些 wiki 知識頁面
-```
+  <!-- Arrow 2→3 -->
+  <path d="M300,140 L318,140" stroke="#94a3b8" stroke-width="2" marker-end="url(#a2)"/>
+
+  <!-- Step 3 -->
+  <rect x="320" y="50" width="128" height="180" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="384" y="76" text-anchor="middle" font-size="20" fill="#1e3a8a">③</text>
+  <text x="384" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#1e3a8a">圖譜同步</text>
+  <text x="384" y="118" text-anchor="middle" font-size="10" fill="#1d4ed8">重建 graph</text>
+  <text x="384" y="134" text-anchor="middle" font-size="10" fill="#1d4ed8">增量 embedding</text>
+  <text x="384" y="150" text-anchor="middle" font-size="10" fill="#1d4ed8">refresh</text>
+  <text x="384" y="170" text-anchor="middle" font-size="10" fill="#2563eb">wiki 更新後觸發</text>
+
+  <!-- Arrow 3→4 -->
+  <path d="M450,140 L468,140" stroke="#94a3b8" stroke-width="2" marker-end="url(#a2)"/>
+
+  <!-- Step 4 -->
+  <rect x="470" y="50" width="128" height="180" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+  <text x="534" y="76" text-anchor="middle" font-size="20" fill="#064e3b">④</text>
+  <text x="534" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#064e3b">Code Relink</text>
+  <text x="534" y="118" text-anchor="middle" font-size="10" fill="#065f46">掃描 code symbols</text>
+  <text x="534" y="134" text-anchor="middle" font-size="10" fill="#065f46">name + embedding</text>
+  <text x="534" y="150" text-anchor="middle" font-size="10" fill="#065f46">含時間衰減排序</text>
+  <text x="534" y="170" text-anchor="middle" font-size="10" fill="#059669">每週一次</text>
+
+  <!-- Arrow 4→5 -->
+  <path d="M600,140 L618,140" stroke="#94a3b8" stroke-width="2" marker-end="url(#a2)"/>
+
+  <!-- Step 5 -->
+  <rect x="620" y="50" width="120" height="180" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+  <text x="680" y="76" text-anchor="middle" font-size="20" fill="#334155">⑤</text>
+  <text x="680" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">Agent 查詢</text>
+  <text x="680" y="118" text-anchor="middle" font-size="10" fill="#475569">wiki 搜尋</text>
+  <text x="680" y="134" text-anchor="middle" font-size="10" fill="#475569">（時間感知）</text>
+  <text x="680" y="154" text-anchor="middle" font-size="10" fill="#475569">code graph</text>
+  <text x="680" y="170" text-anchor="middle" font-size="10" fill="#475569">查詢</text>
+  <text x="680" y="190" text-anchor="middle" font-size="10" fill="#64748b">工作時即時</text>
+
+  <!-- Bottom labels -->
+  <text x="380" y="255" text-anchor="middle" font-size="10" fill="#94a3b8">① 持續 → ② 定期 → ③④ 同步 → ⑤ 即時</text>
+</svg>
+</figure>
 
 ---
 
